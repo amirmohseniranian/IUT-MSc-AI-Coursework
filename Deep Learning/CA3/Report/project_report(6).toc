@@ -1,0 +1,36 @@
+\contentsline {section}{Abstract}{3}{Doc-Start}%
+\contentsline {section}{\numberline {1}Introduction}{3}{section.1}%
+\contentsline {section}{\numberline {2}Project Overview}{3}{section.2}%
+\contentsline {section}{\numberline {3}Technical Foundations}{4}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Supervised multiclass image classification}{4}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Convolutional representation learning}{5}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}ReLU activation and batch normalization}{5}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Softmax output}{5}{subsection.3.4}%
+\contentsline {section}{\numberline {4}Data and Input Processing}{5}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Dataset acquisition}{5}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Training and validation split}{5}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}On-the-fly augmentation}{6}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Normalization}{6}{subsection.4.4}%
+\contentsline {section}{\numberline {5}System Architecture and Code Organization}{6}{section.5}%
+\contentsline {section}{\numberline {6}Detailed Methodology}{7}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Model input and feature extractor}{7}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Global average pooling and dense head}{8}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}L2 regularization and dropout}{8}{subsection.6.3}%
+\contentsline {section}{\numberline {7}Objective Function and Mathematical Formulation}{8}{section.7}%
+\contentsline {section}{\numberline {8}Optimization and Hyperparameter Search}{9}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Optimizer behavior in the implementation}{10}{subsection.8.1}%
+\contentsline {section}{\numberline {9}Full Training Procedure and Callbacks}{10}{section.9}%
+\contentsline {section}{\numberline {10}Detailed Evaluation Pipeline}{11}{section.10}%
+\contentsline {section}{\numberline {11}Inference Demonstration}{11}{section.11}%
+\contentsline {section}{\numberline {12}Implementation Details}{12}{section.12}%
+\contentsline {subsection}{\numberline {12.1}Configuration}{12}{subsection.12.1}%
+\contentsline {subsection}{\numberline {12.2}Filesystem and artifact management}{12}{subsection.12.2}%
+\contentsline {subsection}{\numberline {12.3}Runtime hardware awareness}{12}{subsection.12.3}%
+\contentsline {section}{\numberline {13}Execution Workflow}{12}{section.13}%
+\contentsline {section}{\numberline {14}Design Decisions and Rationale}{13}{section.14}%
+\contentsline {section}{\numberline {15}Computational Considerations}{13}{section.15}%
+\contentsline {section}{\numberline {16}Reproducibility and Reliability}{14}{section.16}%
+\contentsline {section}{\numberline {17}Limitations and Technical Considerations}{14}{section.17}%
+\contentsline {section}{\numberline {18}Overall Technical Assessment}{15}{section.18}%
+\contentsline {section}{\numberline {19}Conclusion}{16}{section.19}%
+\contentsline {section}{Source Traceability Notes}{16}{section.19}%
