@@ -1,0 +1,13 @@
+{
+  "rows": 264,
+  "targets": 22,
+  "mean_MAE_linear_targets": 11.368166523685542,
+  "mean_RMSE_linear_targets": 12.316493313632241,
+  "mean_NRMSE_percent": 367.55195517399676,
+  "mean_R2_linear_targets": -20.868597857730144,
+  "mean_coverage_95_percent": 55.14579759862777,
+  "wind_direction_circular_RMSE": 129.18367624294038,
+  "runtime_seconds": 109.82361192899998,
+  "source": "https://archive-api.open-meteo.com/v1/archive?latitude=32.6546&longitude=51.668&start_date=2022-05-01&end_date=2023-01-19&hourly=temperature_2m%2Crelative_humidity_2m%2Cdew_point_2m%2Capparent_temperature%2Cprecipitation%2Crain%2Csnowfall%2Cwind_speed_10m%2Cwind_gusts_10m%2Cwind_direction_10m%2Cshortwave_radiation%2Ccloud_cover%2Cpressure_msl%2Cet0_fao_evapotranspiration%2Cvapour_pressure_deficit%2Csoil_moisture_0_to_7cm&timezone=Asia%2FTehran&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&format=csv",
+  "test_mode": false
+}
