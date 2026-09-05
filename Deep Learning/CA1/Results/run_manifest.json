@@ -1,0 +1,30 @@
+{
+  "seed": 42,
+  "q1": {
+    "train_samples": 70,
+    "test_samples": 30,
+    "epochs": 2,
+    "train_accuracy": 1.0,
+    "test_accuracy": 1.0
+  },
+  "q2": {
+    "train_samples": 70,
+    "test_samples": 30,
+    "hidden_units": 12,
+    "learning_rate": 0.03,
+    "epochs": 5000,
+    "train_accuracy": 0.9714285714285714,
+    "test_accuracy": 1.0
+  },
+  "saved_files": [
+    "final_results_summary.csv",
+    "q1_classification.png",
+    "q1_confusion_matrix.csv",
+    "q2_confusion_matrix.csv",
+    "q2_decision_boundary.png",
+    "q2_model_parameters.npz",
+    "q2_training_accuracy.png",
+    "q2_training_history.csv",
+    "q2_training_loss.png"
+  ]
+}
