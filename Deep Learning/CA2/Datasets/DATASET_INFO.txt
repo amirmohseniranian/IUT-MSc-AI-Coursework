@@ -1,0 +1,8 @@
+HODA dataset conversion
+Source: Data_hoda_full.mat
+Source SHA256: 39629eb751892b39fc5d1e987b472d441e4dffcbe8218931b73f466d8b2f3ce2
+Assignment split: first 10,000 samples for training; next 2,000 for testing.
+CSV pixel encoding: one space-separated uint8 value per original pixel, row-major order.
+The height and width columns allow exact reconstruction of each original image.
+Train label counts: [996, 1017, 999, 1013, 1043, 1000, 972, 993, 987, 980]
+Test label counts: [220, 197, 192, 180, 200, 185, 209, 206, 204, 207]
