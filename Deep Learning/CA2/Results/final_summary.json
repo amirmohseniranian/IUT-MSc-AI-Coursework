@@ -1,0 +1,11 @@
+{
+  "best_search_configuration": "Adam @ 1e-03",
+  "best_validation_accuracy": 0.984666645526886,
+  "best_training_accuracy_observed": 0.9975293874740601,
+  "test_accuracy": 0.9779999852180481,
+  "test_loss": 0.07480612397193909,
+  "misclassified_test_images": 44,
+  "test_size": 2000,
+  "first_test_true_digit": 5,
+  "first_test_predicted_digit": 5
+}
