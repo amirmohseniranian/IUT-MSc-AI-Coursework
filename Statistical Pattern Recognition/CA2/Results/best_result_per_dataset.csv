@@ -1,0 +1,4 @@
+dataset,evaluation_protocol,classifier,parameter,accuracy,accuracy_percent
+Iris,leave-one-out,kNN,k=1,0.96,96.0
+Liquid,leave-one-out,kNN,k=1,0.7696629213483146,76.96629213483146
+Normal,fixed testing set,MMD,mean-distance,0.975,97.5

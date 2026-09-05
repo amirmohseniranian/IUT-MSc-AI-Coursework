@@ -1,0 +1,7 @@
+dataset,classifier,accuracy
+Iris,MMD,0.92
+Iris,kNN,0.96
+Liquid,MMD,0.7247191011235955
+Liquid,kNN,0.7602996254681648
+Normal,MMD,0.975
+Normal,kNN,0.9541666666666666

@@ -1,0 +1,13 @@
+dataset,evaluation_protocol,classifier,parameter,accuracy,accuracy_percent
+Iris,leave-one-out,kNN,k=1,0.96,96.0
+Iris,leave-one-out,kNN,k=2,0.96,96.0
+Iris,leave-one-out,kNN,k=3,0.96,96.0
+Iris,leave-one-out,MMD,mean-distance,0.92,92.0
+Liquid,leave-one-out,kNN,k=1,0.7696629213483146,76.96629213483146
+Liquid,leave-one-out,kNN,k=2,0.7696629213483146,76.96629213483146
+Liquid,leave-one-out,kNN,k=3,0.7415730337078652,74.15730337078652
+Liquid,leave-one-out,MMD,mean-distance,0.7247191011235955,72.47191011235955
+Normal,fixed testing set,kNN,k=1,0.95,95.0
+Normal,fixed testing set,kNN,k=2,0.95,95.0
+Normal,fixed testing set,kNN,k=3,0.9625,96.25
+Normal,fixed testing set,MMD,mean-distance,0.975,97.5
