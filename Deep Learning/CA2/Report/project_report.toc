@@ -1,0 +1,52 @@
+\contentsline {section}{Abstract}{3}{Doc-Start}%
+\contentsline {section}{\numberline {1}Introduction}{3}{section.1}%
+\contentsline {section}{\numberline {2}Project Overview}{4}{section.2}%
+\contentsline {section}{\numberline {3}Technical Foundations}{4}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Supervised multiclass classification}{4}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Dense neural transformations}{4}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Batch normalization}{5}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Dropout}{5}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3.5}Softmax and cross-entropy}{5}{subsection.3.5}%
+\contentsline {section}{\numberline {4}Data and Input Processing}{5}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Input contract}{5}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Exact reconstruction of variable-sized images}{6}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Resizing and intensity scaling}{6}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Flattening}{6}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Validation split and feature standardization}{7}{subsection.4.5}%
+\contentsline {section}{\numberline {5}System Architecture and Code Organization}{7}{section.5}%
+\contentsline {section}{\numberline {6}Detailed Methodology}{8}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Environment and reproducibility controls}{8}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Data loading and defensive validation}{8}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Model construction}{8}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Optimizer abstraction}{8}{subsection.6.4}%
+\contentsline {subsection}{\numberline {6.5}Controlled hyperparameter search}{9}{subsection.6.5}%
+\contentsline {subsection}{\numberline {6.6}Final training procedure}{9}{subsection.6.6}%
+\contentsline {subsection}{\numberline {6.7}Test evaluation}{10}{subsection.6.7}%
+\contentsline {subsection}{\numberline {6.8}Prediction and diagnostics}{10}{subsection.6.8}%
+\contentsline {section}{\numberline {7}Mathematical Formulation}{10}{section.7}%
+\contentsline {subsection}{\numberline {7.1}End-to-end mapping}{10}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Hidden-layer transformations}{10}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Accuracy and error rate}{11}{subsection.7.3}%
+\contentsline {subsection}{\numberline {7.4}Confusion matrix}{11}{subsection.7.4}%
+\contentsline {section}{\numberline {8}Optimization and Learning Procedure}{11}{section.8}%
+\contentsline {section}{\numberline {9}Implementation Details}{11}{section.9}%
+\contentsline {subsection}{\numberline {9.1}Library responsibilities}{11}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}Data types}{12}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}Batch size}{12}{subsection.9.3}%
+\contentsline {subsection}{\numberline {9.4}Runtime artifacts}{12}{subsection.9.4}%
+\contentsline {section}{\numberline {10}Execution Workflow}{12}{section.10}%
+\contentsline {section}{\numberline {11}Design Decisions and Rationale}{13}{section.11}%
+\contentsline {section}{\numberline {12}Computational Considerations}{13}{section.12}%
+\contentsline {subsection}{\numberline {12.1}Parameter and forward-pass cost}{13}{subsection.12.1}%
+\contentsline {subsection}{\numberline {12.2}Memory behavior}{13}{subsection.12.2}%
+\contentsline {subsection}{\numberline {12.3}Potential bottlenecks}{13}{subsection.12.3}%
+\contentsline {section}{\numberline {13}Reproducibility and Reliability}{14}{section.13}%
+\contentsline {section}{\numberline {14}Limitations and Technical Considerations}{14}{section.14}%
+\contentsline {subsection}{\numberline {14.1}Representation limits}{14}{subsection.14.1}%
+\contentsline {subsection}{\numberline {14.2}Resolution trade-off}{14}{subsection.14.2}%
+\contentsline {subsection}{\numberline {14.3}Search-space limitations}{14}{subsection.14.3}%
+\contentsline {subsection}{\numberline {14.4}Validation protocol nuance}{14}{subsection.14.4}%
+\contentsline {subsection}{\numberline {14.5}Dependency and environment constraints}{15}{subsection.14.5}%
+\contentsline {section}{\numberline {15}Overall Technical Assessment}{15}{section.15}%
+\contentsline {section}{\numberline {16}Conclusion}{15}{section.16}%
+\contentsline {section}{Source-to-Report Traceability Note}{16}{section.16}%
