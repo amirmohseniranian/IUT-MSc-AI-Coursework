@@ -1,0 +1,9 @@
+family,parameter_name,parameter_value,alpha,mean_final_window_steps,median_final_window_steps,std_final_window_steps,best_episode_steps,episodes,seeds
+n_step_sarsa,n,5.000,0.100,99.006,35.500,298.427,18,80,2
+sarsa_lambda,lambda,0.500,0.100,148.156,63.500,366.406,20,80,2
+n_step_sarsa,n,5.000,0.300,90.838,22.000,393.574,18,80,2
+sarsa_lambda,lambda,0.500,0.300,78.150,36.500,172.923,17,80,2
+n_step_sarsa,n,5.000,0.500,84.575,24.000,293.261,17,80,2
+sarsa_lambda,lambda,0.500,0.500,61.256,32.500,130.661,17,80,2
+n_step_sarsa,n,5.000,0.700,149.394,36.000,470.436,17,80,2
+sarsa_lambda,lambda,0.500,0.700,57.562,31.000,121.785,17,80,2

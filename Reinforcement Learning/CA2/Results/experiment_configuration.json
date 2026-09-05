@@ -1,0 +1,54 @@
+{
+  "episodes": 100,
+  "alpha_sweep_episodes": 80,
+  "main_seeds": [
+    13,
+    42,
+    123
+  ],
+  "alpha_sweep_seeds": [
+    13,
+    42
+  ],
+  "gamma": 0.99,
+  "epsilon": 0.1,
+  "main_alpha": 0.5,
+  "alpha_values": [
+    0.1,
+    0.3,
+    0.5,
+    0.7
+  ],
+  "max_steps_per_episode": 50000,
+  "wind": [
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    0
+  ],
+  "start_state": [
+    3,
+    0
+  ],
+  "goal_state": [
+    3,
+    7
+  ],
+  "n_step_values": [
+    1,
+    5,
+    10
+  ],
+  "lambda_values": [
+    0.0,
+    0.1,
+    0.5,
+    1.0
+  ]
+}

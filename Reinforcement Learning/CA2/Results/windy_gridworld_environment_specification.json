@@ -1,0 +1,37 @@
+{
+  "name": "Windy Gridworld",
+  "grid_shape": [
+    7,
+    10
+  ],
+  "start_state": [
+    3,
+    0
+  ],
+  "goal_state": [
+    3,
+    7
+  ],
+  "wind_by_column": [
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    0
+  ],
+  "actions": {
+    "0": "up",
+    "1": "down",
+    "2": "left",
+    "3": "right"
+  },
+  "reward_per_step": -1,
+  "discount_factor": 0.99,
+  "termination": "episode ends when the goal state is reached",
+  "note": "The assignment is a tabular RL environment problem; no external real-world dataset is required."
+}
