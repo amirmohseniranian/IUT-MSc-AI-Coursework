@@ -1,0 +1,10 @@
+{
+  "episodes": 1000,
+  "recent100_return": 93.29526278234047,
+  "training_success_rate": 1.0,
+  "evaluation_mean_return": 93.20058635692514,
+  "evaluation_success_rate": 1.0,
+  "evaluation_mean_length": 71.9,
+  "evaluation_position_max": 0.4204024374485016,
+  "wall_clock_seconds": 275.7512652873993
+}
