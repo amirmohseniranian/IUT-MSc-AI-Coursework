@@ -1,0 +1,3 @@
+Dataset_Split,Accuracy,Precision (Macro),Recall (Macro),F1-Score (Macro),Precision (Weighted),Recall (Weighted),F1-Score (Weighted)
+Training Set,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+Validation Set,1.0,1.0,1.0,1.0,1.0,1.0,1.0
