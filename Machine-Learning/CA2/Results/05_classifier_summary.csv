@@ -1,0 +1,4 @@
+Classifier,Accuracy,Precision,Intercept
+Ridge Classifier,1.0,1.0,-1.9281337207163856
+SGD Classifier,0.8571428571428571,1.0,-18.20149781129888
+Logistic Regression,1.0,1.0,-19.287706827278978
