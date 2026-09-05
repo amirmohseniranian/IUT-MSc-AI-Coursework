@@ -1,0 +1,48 @@
+\contentsline {section}{Abstract}{3}{section*.2}%
+\contentsline {section}{\numberline {1}Introduction}{3}{section.1}%
+\contentsline {section}{\numberline {2}Project Overview}{3}{section.2}%
+\contentsline {section}{\numberline {3}Technical Foundations}{4}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Markov decision process}{4}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Continuous Gaussian policy}{5}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Policy-gradient advantage estimation}{5}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}PPO clipped objective}{5}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3.5}Observation normalization}{6}{subsection.3.5}%
+\contentsline {section}{\numberline {4}Data and Input Processing}{6}{section.4}%
+\contentsline {section}{\numberline {5}System Architecture and Code Organization}{6}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Configuration layer}{7}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Reproducibility utilities}{7}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Dependency gate}{7}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}Neural-network initialization}{7}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}Actor-critic model}{7}{subsection.5.5}%
+\contentsline {subsection}{\numberline {5.6}GAE utility}{7}{subsection.5.6}%
+\contentsline {subsection}{\numberline {5.7}Evaluation and diagnostics}{8}{subsection.5.7}%
+\contentsline {subsection}{\numberline {5.8}Artifact management}{8}{subsection.5.8}%
+\contentsline {section}{\numberline {6}Detailed Methodology}{8}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Environment initialization}{8}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Rollout collection}{8}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Bootstrap and target construction}{8}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Minibatch PPO updates}{9}{subsection.6.4}%
+\contentsline {subsection}{\numberline {6.5}Progress reporting}{9}{subsection.6.5}%
+\contentsline {subsection}{\numberline {6.6}Checkpointing}{9}{subsection.6.6}%
+\contentsline {section}{\numberline {7}Mathematical Formulation}{9}{section.7}%
+\contentsline {section}{\numberline {8}Optimization and Learning Procedure}{11}{section.8}%
+\contentsline {section}{\numberline {9}Implementation Details}{11}{section.9}%
+\contentsline {subsection}{\numberline {9.1}Network structure}{11}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}Device handling}{11}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}Numerical stability}{11}{subsection.9.3}%
+\contentsline {subsection}{\numberline {9.4}Smoke test}{11}{subsection.9.4}%
+\contentsline {section}{\numberline {10}Execution Workflow}{12}{section.10}%
+\contentsline {section}{\numberline {11}Design Decisions and Rationale}{12}{section.11}%
+\contentsline {section}{\numberline {12}Computational Considerations}{13}{section.12}%
+\contentsline {section}{\numberline {13}Reproducibility and Reliability}{13}{section.13}%
+\contentsline {section}{\numberline {14}Limitations and Technical Considerations}{13}{section.14}%
+\contentsline {subsection}{\numberline {14.1}Bounded-action and log-probability mismatch}{13}{subsection.14.1}%
+\contentsline {subsection}{\numberline {14.2}Exploration scale is unconstrained}{14}{subsection.14.2}%
+\contentsline {subsection}{\numberline {14.3}Terminal-versus-truncation handling}{14}{subsection.14.3}%
+\contentsline {subsection}{\numberline {14.4}Minibatch-local advantage normalization}{14}{subsection.14.4}%
+\contentsline {subsection}{\numberline {14.5}Evaluation diagnostics are first-episode focused}{14}{subsection.14.5}%
+\contentsline {subsection}{\numberline {14.6}Output management does not equal scientific validation}{14}{subsection.14.6}%
+\contentsline {section}{\numberline {15}Overall Technical Assessment}{15}{section.15}%
+\contentsline {section}{\numberline {16}Conclusion}{15}{section.16}%
+\contentsline {section}{\numberline {A}Configuration Reference}{16}{appendix.A}%
+\contentsline {section}{\numberline {B}Artifact Reference}{16}{appendix.B}%
