@@ -306,34 +306,3 @@ assignment2_outputs/results/experiment_metadata.json
 ```
 
 This separation between methodology and observed results is intentional and avoids presenting unverified numbers as experimental evidence.
-
-## Limitations and Scientific Caveats
-
-### 1. The original Liquid database is unavailable
-
-The main limitation is data provenance. The source explicitly states that the databases described in Assignment 1.2 were not provided. Therefore, the Wine dataset is a **proxy**, not the original Liquid dataset. Conclusions about the original assignment's Liquid task would require the missing data.
-
-### 2. Euclidean distance is scale-sensitive
-
-Because no normalization or standardization is applied, features with larger numerical ranges can contribute more strongly to Euclidean distances. This is especially relevant for the multi-feature Wine proxy. The implementation follows the requested methodology rather than correcting this effect.
-
-### 3. No model selection procedure is performed
-
-The code evaluates only $k=1,2,3$ and MMD. It does not perform cross-validation-based hyperparameter selection, metric learning, feature selection, or systematic preprocessing comparison.
-
-### 4. Leave-one-out evaluation is computationally repetitive
-
-The LOO implementation rebuilds the effective training subset for every sample and recomputes distances for each prediction. This is appropriate for the assignment protocol, but it is not the most computationally efficient way to implement nearest-neighbour evaluation.
-
-### 5. MMD is a prototype classifier
-
-MMD represents each class by a single arithmetic mean. For a class with multimodal structure, that single mean can be inadequate even when the class is well separated under a more expressive decision rule.
-
-### 6. Synthetic Normal data are not empirical data
-
-The Normal benchmark is generated from explicitly chosen Gaussian parameters. Its results measure classifier behaviour under this controlled synthetic distribution and should not be interpreted as evidence about a real-world population.
-
-### 7. No uncertainty analysis is reported
-
-The implementation reports point accuracy and confusion matrices, but it does not compute confidence intervals, repeated trials, bootstrap uncertainty, statistical significance tests, or variance estimates for the observed accuracies.
-
