@@ -1,0 +1,8 @@
+{
+  "train_poems": 89296,
+  "validation_poems": 9922,
+  "train_characters": 2297527,
+  "validation_characters": 255179,
+  "train_ratio_by_poem": 0.8999979842367313,
+  "validation_ratio_by_poem": 0.10000201576326877
+}

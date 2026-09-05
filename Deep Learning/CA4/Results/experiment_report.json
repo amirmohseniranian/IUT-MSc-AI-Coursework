@@ -1,0 +1,60 @@
+{
+  "assignment": "Deep Learning Computer Assignment 4",
+  "objective": "Character-level recurrent language modeling of Shahnameh text",
+  "model": {
+    "architecture": "Embedding -> 2 x LSTM -> Dense -> Softmax",
+    "embedding_dim": 256,
+    "rnn_units": 512,
+    "dropout_rate": 0.25,
+    "sequence_length": 128,
+    "batch_size": 128,
+    "initial_learning_rate": 0.002,
+    "gradient_clipnorm": 1.0
+  },
+  "training": {
+    "epochs_requested": 10,
+    "epochs_completed": 10,
+    "seed": 42,
+    "gpu_names": [
+      "/physical_device:GPU:0"
+    ],
+    "mixed_precision_policy": "mixed_float16"
+  },
+  "dataset": {
+    "source": "local user-provided shahnameh.txt",
+    "path": "/content/shahnameh.txt",
+    "sha256": "e39838420ace5b519922c0a7ad9a08b930733e127e6632e57392cd7e1caa2e4c",
+    "file_characters_raw": 2653849,
+    "file_characters_normalized": 2552707,
+    "records_created": 99218
+  },
+  "split": {
+    "train_poems": 89296,
+    "validation_poems": 9922,
+    "train_characters": 2297527,
+    "validation_characters": 255179,
+    "train_ratio_by_poem": 0.8999979842367313,
+    "validation_ratio_by_poem": 0.10000201576326877
+  },
+  "metrics": {
+    "validation_loss": 1.240887999534607,
+    "validation_accuracy": 0.6157181859016418,
+    "validation_perplexity": 3.4586834107647446,
+    "generated_4gram_repetition_rate": 0.3362745098039216,
+    "generated_4gram_novelty_vs_train": 0.0,
+    "generated_line_length_statistics": {
+      "count": 39.0,
+      "mean": 25.256410256410255,
+      "std": 2.667159717732481,
+      "median": 26.0
+    }
+  },
+  "generation": {
+    "seed_prompt": "به نام خداوند جان و خرد",
+    "requested_length": 1000,
+    "actual_length": 1023,
+    "temperature": 0.72,
+    "top_k": 20,
+    "top_p": 0.88
+  }
+}

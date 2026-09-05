@@ -1,0 +1,12 @@
+metric,value
+validation_loss,1.240887999534607
+validation_accuracy,0.6157181859016418
+validation_perplexity,3.4586834107647446
+generated_4gram_repetition_rate,0.3362745098039216
+generated_4gram_novelty_vs_train,0.0
+generated_characters_excluding_newlines,985.0
+generated_line_count,39.0
+generated_line_length_mean,25.256410256410255
+generated_line_length_std,2.667159717732481
+generated_line_length_median,26.0
+training_unique_characters,35.0

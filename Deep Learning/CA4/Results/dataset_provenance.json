@@ -1,0 +1,8 @@
+{
+  "source": "local user-provided shahnameh.txt",
+  "path": "/content/shahnameh.txt",
+  "sha256": "e39838420ace5b519922c0a7ad9a08b930733e127e6632e57392cd7e1caa2e4c",
+  "file_characters_raw": 2653849,
+  "file_characters_normalized": 2552707,
+  "records_created": 99218
+}
