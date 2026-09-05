@@ -1,0 +1,32 @@
+\contentsline {section}{\numberline {1}Introduction}{3}{section.1}%
+\contentsline {section}{\numberline {2}Project Overview}{3}{section.2}%
+\contentsline {section}{\numberline {3}Technical Foundations}{4}{section.3}%
+\contentsline {section}{\numberline {4}Data and Input Processing}{5}{section.4}%
+\contentsline {section}{\numberline {5}System Architecture and Code Organization}{5}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Dependencies and shared utilities}{5}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Execution flow}{6}{subsection.5.2}%
+\contentsline {section}{\numberline {6}Detailed Methodology}{6}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Part 1: Figure 5.3 gridworld}{6}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Part 2: Exercise 15.3}{7}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Part 3: Policy evaluation}{7}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Part 4: Policy iteration}{8}{subsection.6.4}%
+\contentsline {subsection}{\numberline {6.5}Part 5: Value iteration}{8}{subsection.6.5}%
+\contentsline {section}{\numberline {7}Mathematical Formulation}{9}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Uniform-policy evaluation}{9}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Policy evaluation under a fixed deterministic policy}{9}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Action-value comparison}{9}{subsection.7.3}%
+\contentsline {subsection}{\numberline {7.4}Convergence threshold}{9}{subsection.7.4}%
+\contentsline {section}{\numberline {8}Optimization and Learning Procedure}{10}{section.8}%
+\contentsline {section}{\numberline {9}Implementation Details}{10}{section.9}%
+\contentsline {subsection}{\numberline {9.1}State representation}{10}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}Action representation}{10}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}Update order}{10}{subsection.9.3}%
+\contentsline {subsection}{\numberline {9.4}Output persistence}{10}{subsection.9.4}%
+\contentsline {subsection}{\numberline {9.5}Notebook portability}{11}{subsection.9.5}%
+\contentsline {section}{\numberline {10}Execution Workflow}{11}{section.10}%
+\contentsline {section}{\numberline {11}Design Decisions and Rationale}{11}{section.11}%
+\contentsline {section}{\numberline {12}Computational Considerations}{12}{section.12}%
+\contentsline {section}{\numberline {13}Reproducibility and Reliability}{12}{section.13}%
+\contentsline {section}{\numberline {14}Limitations and Technical Considerations}{12}{section.14}%
+\contentsline {section}{\numberline {15}Overall Technical Assessment}{13}{section.15}%
+\contentsline {section}{Conclusion}{14}{section.15}%
