@@ -1,0 +1,35 @@
+\contentsline {section}{Abstract}{1}{section*.2}%
+\contentsline {section}{\numberline {1}Introduction}{1}{section.1}%
+\contentsline {section}{\numberline {2}Project Overview}{1}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Source inventory}{2}{subsection.2.1}%
+\contentsline {section}{\numberline {3}Technical Foundations}{2}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Linear multiclass classification}{2}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}The multiclass perceptron update}{3}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Nonlinear feed-forward classification}{3}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Sigmoid and binary cross-entropy}{3}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3.5}Backpropagation}{4}{subsection.3.5}%
+\contentsline {section}{\numberline {4}Data and Input Processing}{4}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Dataset discovery and fallback behavior}{4}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}The Q1 label-consistency issue}{4}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Train/test construction}{5}{subsection.4.3}%
+\contentsline {section}{\numberline {5}Detailed Methodology}{5}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Task 1: single-layer multiclass perceptron}{5}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Task 2: two-layer nonlinear network}{5}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Evaluation and serialization}{6}{subsection.5.3}%
+\contentsline {section}{\numberline {6}System Architecture and Code Organization}{6}{section.6}%
+\contentsline {section}{\numberline {7}Implementation Details and Design Decisions}{7}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Reproducibility controls}{7}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Validation philosophy}{7}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Numerical safeguards}{7}{subsection.7.3}%
+\contentsline {subsection}{\numberline {7.4}Toolbox restriction and algorithm ownership}{7}{subsection.7.4}%
+\contentsline {subsection}{\numberline {7.5}Auxiliary plotting path}{8}{subsection.7.5}%
+\contentsline {section}{\numberline {8}Execution Workflow}{8}{section.8}%
+\contentsline {section}{\numberline {9}Design Decisions and Rationale}{8}{section.9}%
+\contentsline {section}{\numberline {10}Computational Considerations}{9}{section.10}%
+\contentsline {subsection}{\numberline {10.1}Potential numerical and algorithmic constraints}{9}{subsection.10.1}%
+\contentsline {section}{\numberline {11}Reproducibility and Reliability}{9}{section.11}%
+\contentsline {section}{\numberline {12}Limitations and Technical Considerations}{10}{section.12}%
+\contentsline {section}{\numberline {13}Overall Technical Assessment}{10}{section.13}%
+\contentsline {section}{\numberline {14}Conclusion}{11}{section.14}%
+\contentsline {section}{\numberline {A}Complete Source-Coverage Traceability}{12}{appendix.A}%
+\contentsline {section}{\numberline {B}Implementation Parameters Explicitly Present in the Source}{13}{appendix.B}%
