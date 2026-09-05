@@ -1,0 +1,462 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[a4paper,margin=28mm,headheight=14pt]{geometry}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{setspace}
+\usepackage{ragged2e}
+\hypersetup{colorlinks=true,linkcolor=black,urlcolor=blue,citecolor=black}
+\setstretch{1.07}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\titleformat{\section}{\Large\bfseries}{\thesection}{0.7em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{0.7em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection}{0.7em}{}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Technical Analysis of Reconstructed MATLAB Workflows}
+\fancyhead[R]{\thepage}
+\fancyfoot{}
+\lstset{basicstyle=\ttfamily\small,breaklines=true,columns=fullflexible,frame=single,keepspaces=true}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\diag}{\operatorname{diag}}
+\begin{document}
+\begin{titlepage}
+\centering
+\vspace*{25mm}
+{\Huge\bfseries Technical Analysis of Reconstructed MATLAB Evolutionary-Optimization Workflows\par}
+\vspace{9mm}
+{\Large Faithful Python reconstruction of Evolution Strategy and Traveling Salesman Problem workflows\par}
+\vfill
+{\large Publication-oriented technical report\par}
+\vspace{6mm}
+{\large Source analyzed: \texttt{matlab\_reconstructed\_workflows(1).py}\par}
+\vspace*{20mm}
+\end{titlepage}
+
+\pagenumbering{roman}
+\tableofcontents
+\clearpage
+\pagenumbering{arabic}
+
+\section*{Abstract}
+\addcontentsline{toc}{section}{Abstract}
+The analyzed source file reconstructs four optimization workflows that were originally organized as MATLAB programs: two Evolution Strategy (ES) workflows for a continuous objective and two permutation-based evolutionary workflows for the Traveling Salesman Problem (TSP). The implementation combines the reconstructed algorithms with runtime metadata, deterministic seeding, validation utilities, artifact serialization, and optional Google Colab download behavior. It therefore serves both as an optimization implementation and as a reproducibility-oriented harness around it.
+
+The main technical contribution is not a new optimization algorithm, but a careful translation of several evolutionary-computation mechanisms into Python while preserving configurable choices visible in the reconstructed MATLAB workflows. The ES implementation supports uncorrelated one-step mutation, uncorrelated $n$-step mutation, and a correlated mutation representation; several crossover modes are available; survivor selection distinguishes $(\mu,\lambda)$ and $(\mu+\lambda)$ replacement; and the primary objective is the Ackley function, with a shifted Rosenbrock objective retained as an alternative from the source archive. The TSP implementation uses permutation representations, several permutation-safe crossover operators, four mutation operators, multiple parent-selection policies, fitness defined as the reciprocal of tour cost, and evolutionary survivor replacement.
+
+This report reconstructs the conceptual and computational pipeline from the source. It separates general theory from implementation details, states the mathematical formulations explicitly, analyzes complexity and numerical behavior, and identifies key fidelity decisions and limitations. It also distinguishes the intended algorithmic structure from the literal execution behavior of the submitted file. One significant issue is that the file places a \code{from \_\_future\_\_ import annotations} statement after additional top-level string literals, so it is not directly executable by Python without a syntactic adjustment. That issue is documented rather than hidden. No experimental figures or result visualizations are reproduced here.
+
+\section{Introduction}
+The project addresses a classical computational-optimization setting: search over large or non-convex spaces where exact deterministic optimization is difficult or impractical for the intended use. It has two complementary targets. The Evolution Strategy component operates on real-valued vectors and evolves both decision variables and mutation-control parameters. The TSP component operates on permutations and therefore requires operators that preserve route validity rather than treating routes as unconstrained numeric vectors.
+
+The file describes itself as a ``faithful Python reconstruction'' of the supplied MATLAB ES and TSP workflows. This framing is important when interpreting the implementation: the primary engineering goal is fidelity to an existing workflow, not redesign around a modern Python optimization framework. The reconstruction therefore retains configuration names and operator combinations from the MATLAB programs, including spellings such as \code{tournoment}, \code{roletwheel}, \code{trancation}, and \code{landa\_va\_mua}. These are implementation identifiers, not standard terminology.
+
+The report covers the complete file, including environment setup, reproducibility utilities, objective functions, population representations, genetic operators, validation routines, result serialization, workflow dispatch, and the final executable cells. The emphasis is on what the code actually does and what follows from that behavior. Where intent is not explicitly encoded, the interpretation is presented as an inference rather than as a fact.
+
+\subsection{Scope and source basis}
+The source is a linearized Python form of a Colab notebook. Its opening lines identify the original notebook name and a Colab location, while later blocks use section-like triple-quoted strings as notebook-style headings. The file contains 1,257 lines and defines 47 functions and four data classes. NumPy, pandas, and Matplotlib are the main numerical and export dependencies; SciPy and PyTorch are probed optionally in the runtime metadata. The four workflows are explicitly listed in \code{WORKFLOW\_INVENTORY}.
+
+The report does not assume access to the original MATLAB source archives because those archives are not present in the uploaded file. The reconstruction does preserve path names such as \code{ES\_Eshraghi\_Sharifi/code/main.m} and \code{TSP\_Eshraghi\_Sharifi/code/main.m}, which provide provenance context. Claims about the original programs are therefore limited to what the reconstructed file explicitly records.
+
+\section{Project Overview}
+Conceptually, the program is organized into four layers. The first is the optimization core: continuous ES routines and permutation-based TSP routines. The second is validation, which checks finite outputs, route validity, exact optimality on a small synthetic TSP instance, and optional forensic consistency of supplied output files. The third is reproducibility and artifact management, which records software versions, seeds, and runtime platform information and exports JSON, CSV, and ZIP artifacts. The fourth is workflow orchestration, which exposes bounded validation settings as defaults while retaining the larger original-scale configurations for reference.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}p{0.18\linewidth}p{0.29\linewidth}p{0.43\linewidth}@{}}
+\toprule
+Workflow & Optimization problem & Core configuration exposed by the source \\
+\midrule
+1 & Continuous ES, single run & Correlated mutation; average-discrete crossover; $(\mu,\lambda)$ survivor mode; Ackley objective \\
+2 & Continuous ES, repeated runs & Same ES configuration; repeated independent seeds; iteration summary \\
+3 & TSP, single run & Order-1 crossover; swap mutation; tournament parent selection; $(\mu,\lambda)$ survivor mode \\
+4 & TSP, repeated runs & Order-1 crossover; inversion mutation; tournament parent selection; repeated independent seeds \\
+\bottomrule
+\end{tabular}
+\caption{Workflow inventory reconstructed from the source configuration.}
+\end{table}
+
+A central design pattern is the separation of configuration from execution. \code{ESConfig} and \code{TSPConfig} collect algorithmic parameters, while \code{run\_es} and \code{run\_tsp} implement the iterative search. The same engines can therefore serve both single-run and repeated-run workflows.
+
+The data flow is straightforward. For ES, an initial population is generated, each member is evaluated, children are created by crossover, mutated, and re-evaluated, survivors are selected, and the best cost is checked against a threshold. For TSP, random permutations initialize the population, route costs are converted to reciprocal fitness, parents are selected, permutation crossover creates children, mutation is applied, survivor replacement forms the next population, and the best fitness and route are recorded.
+
+\section{Technical Foundations}
+\subsection{Evolutionary search}
+Evolutionary algorithms maintain a population rather than a single iterate. Let $P_t=\{x_1,\ldots,x_\mu\}$ denote a population of size $\mu$. A generic generation constructs offspring $C_t$ from $P_t$, evaluates them under an objective or fitness function, and forms $P_{t+1}$ either from the offspring alone or from the union of parents and offspring. The implementation supports both replacement patterns through the survivor-mode switch.
+
+For a minimization objective $f(x)$, lower values are preferred. In the TSP implementation, fitness is instead defined as the reciprocal of cost, so larger values are preferred:
+\begin{equation}
+F(\pi)=\frac{1}{C(\pi)},
+\end{equation}
+where $\pi$ is a permutation and $C(\pi)$ is its closed-tour length. This is a simple monotonic transformation whenever $C(\pi)>0$, so maximizing $F$ is equivalent to minimizing $C$.
+
+\subsection{Evolution Strategies and self-adaptation}
+An ES population member is a pair $(x,\eta)$, where $x\in\R^d$ is the decision vector and $\eta$ stores mutation-control information. This is a self-adaptive representation because the strategy parameters evolve with the solution variables.
+
+The general mutation form is
+\begin{equation}
+x' = \operatorname{clip}\left(x + \varepsilon,\;\ell,\;u\right),
+\qquad
+\varepsilon \sim \mathcal{N}(0,\Sigma),
+\end{equation}
+where $\ell$ and $u$ are componentwise lower and upper bounds and the covariance matrix $\Sigma$ depends on the selected mutation family.
+
+For the uncorrelated one-step representation, one scalar step size $\sigma$ is maintained and
+\begin{equation}
+\Sigma = \sigma I_d.
+\end{equation}
+For the uncorrelated $n$-step representation, a vector $\boldsymbol{\sigma}\in\R_{>0}^d$ is maintained and
+\begin{equation}
+\Sigma = \operatorname{diag}(\boldsymbol{\sigma}).
+\end{equation}
+The correlated representation additionally stores an antisymmetric angle-like matrix $\alpha$, but the submitted code does not use $\alpha$ to rotate the covariance matrix when drawing mutation noise. This distinction between representation and operational effect is important and is discussed later.
+
+\subsection{Ackley objective}
+The primary ES objective is the standard Ackley form used by the implementation:
+\begin{equation}
+f(x)= -20\exp\left(-0.2\frac{\|x\|_2}{\sqrt{d}}\right)
+-\exp\left(\frac{1}{d}\sum_{i=1}^{d}\cos(2\pi x_i)\right)
++20+e.
+\end{equation}
+The code flattens its input, computes the Euclidean norm, averages the cosine term, and returns a scalar floating-point objective. This yields a continuous, multimodal benchmark whose global minimum is at the origin. The report does not infer performance beyond what the algorithm and validation code support.
+
+The implementation also includes a shifted Rosenbrock objective,
+\begin{equation}
+f(x)=200+\sum_{i=1}^{d-1}\left[100(x_{i+1}-x_i^2)^2+(x_i-1)^2\right],
+\end{equation}
+which is not used by the default workflow dispatcher. Its presence indicates that the reconstruction retained an alternative objective visible in the source archive.
+
+\subsection{Permutation representations for the TSP}
+A TSP solution is represented by a permutation $\pi=(\pi_1,\ldots,\pi_n)$ containing each city index exactly once. The route is closed by joining the last city back to the first. The \code{tsp\_cost} function computes
+\begin{equation}
+C(\pi)=\sum_{i=1}^{n} d_{\pi_i,\pi_{i+1}},
+\qquad \pi_{n+1}=\pi_1.
+\end{equation}
+A distance value of $-1$ is replaced with $+\infty$, so that entry is treated as a prohibited edge. The Euclidean distance matrix constructor uses
+\begin{equation}
+d_{ij}=\sqrt{(x_i-x_j)^2+(y_i-y_j)^2}.
+\end{equation}
+
+\section{Data and Input Processing}
+\subsection{Continuous ES inputs}
+The ES routines do not require an external dataset. The population is generated directly from a uniform distribution over a box:
+\begin{equation}
+x_i \sim \operatorname{Uniform}(\ell,u),
+\qquad i=1,\ldots,d.
+\end{equation}
+The benchmark dimension, variable bounds, population size, crossover and mutation probabilities, offspring multiplier, survivor rule, mutation family, and stopping threshold are encoded in \code{ESConfig}.
+
+The validation configuration is deliberately separated from the original-scale configuration. The validation path uses small dimensions and iteration counts to keep the end-to-end run bounded, while the original values are preserved in a JSON configuration object. This allows the notebook to exercise the full control flow without automatically launching the much larger original search.
+
+\subsection{TSP file parsing}
+The TSP parser reads a TSPLIB-style text file line by line. It extracts the instance name, dimension, edge-weight type, and coordinate section. It recognizes the \code{NODE\_COORD\_SECTION} marker and parses each coordinate row into a floating-point pair. If the declared dimension does not match the number of parsed coordinates, an exception is raised.
+
+A separate helper, \code{load\_distance\_matrix\_text}, handles a text format in which the square matrix appears after five header values. The helper is part of the reconstruction but is not connected to the default execution path shown at the bottom of the file. The active validation example instead hard-codes a six-city matrix described in the notebook text as the exact matrix from \code{data.txt}.
+
+\subsection{Input validation}
+The TSP route validator checks route length, whether the sorted route equals the full set of city identifiers $\{0,\ldots,n-1\}$, and the number of duplicate identifiers. This is a structural validity check rather than a proof of optimality. For small instances, the source additionally provides an exact brute-force optimizer, which fixes city 0 as the starting point to eliminate rotational duplicates.
+
+\section{System Architecture and Code Organization}
+The implementation is best understood as a single-module research script with clearly separated conceptual regions.
+
+\subsection{Reproducibility layer}
+\code{set\_global\_seed} seeds both Python's standard \code{random} module and NumPy's legacy global RNG. Individual workflows additionally use \code{numpy.random.Generator} instances created from explicit seeds. This dual pattern is useful when code paths mix random APIs, although the main optimization operators use the local generators.
+
+\code{runtime\_metadata} records the Python version, platform, NumPy, pandas, and Matplotlib versions, plus optional SciPy and PyTorch information. For PyTorch it also records CUDA availability and, when available, the first GPU name. These values are metadata for reproducibility rather than dependencies of the optimization algorithm itself.
+
+\subsection{ES representation and operators}
+\code{ESPopulationMember} bundles three fields: the solution vector, its strategy parameter representation, and its current cost. This avoids parallel arrays and allows the solution and strategy state to be copied together.
+
+\code{initialize\_es\_population} creates initial solution vectors and initializes the corresponding strategy parameters. The scalar and vector mutation families use log-normal sampling; the correlated mode stores both positive scale parameters and an antisymmetric matrix.
+
+\code{crossover\_es} supports four modes: discrete, average, average-discrete, and discrete-average. These modes independently combine solution coordinates and strategy parameters. In correlated mode, the code handles the scale vector and the $\alpha$ matrix separately. The use of copied parameters prevents accidental sharing of mutable NumPy arrays between parent and child representations.
+
+\code{mutate\_es} applies mutation to each candidate with probability $p_m$. The code draws multivariate normal noise from a covariance matrix derived from the evolving step-size state, clips the mutated variable to the configured box constraints, and resets the child's cost to zero until re-evaluation.
+
+\code{select\_es\_survivors} implements two population-replacement policies. In the \code{landa+mua} case, parents and children compete jointly. In the \code{landa\_va\_mua} case, only the children form the survivor pool. Despite their nonstandard identifiers, these correspond conceptually to $(\mu+\lambda)$ and $(\mu,\lambda)$ replacement schemes, respectively.
+
+\subsection{TSP representation and operators}
+The TSP side uses NumPy arrays with integer city identifiers. Four crossover operators are implemented: PMX, Order-1, Cycle, and MOX. Four mutation operators are implemented: swap, insert, inversion, and scramble. Parent selection supports tournament, roulette-style, truncation, and full-random selection, while survivor selection can use parent-plus-child competition or child-only replacement.
+
+This modularity keeps the core evolutionary loop independent of any particular permutation operator. The selected mode is routed through dictionaries or branches, and invalid mode names raise explicit exceptions.
+
+\section{Detailed Methodology}
+\subsection{Evolution Strategy initialization}
+For each individual, $x$ is sampled uniformly from the configured search box, and the strategy parameters are initialized according to the selected mutation family. A soft lower floor is applied through
+\begin{equation}
+\operatorname{softfloor}(z;\epsilon)=\max(z-\epsilon,0)+\epsilon.
+\end{equation}
+For nonnegative $z$, this keeps the result at least $\epsilon$ while becoming the identity once $z\geq 2\epsilon$. The implementation uses $\epsilon=0.01$. The transform prevents zero or near-zero mutation scales from eliminating exploration.
+
+For the one-step method, the code uses
+\begin{equation}
+\tau=\frac{1}{\sqrt{d}},
+\qquad
+\sigma' = \operatorname{softfloor}(\operatorname{LogNormal}(0,\tau^2);\epsilon).
+\end{equation}
+For the $n$-step and correlated initializations, it uses
+\begin{equation}
+\tau=\frac{1}{\sqrt{2\sqrt{d}}},
+\qquad
+\tau'=\frac{1}{\sqrt{2d}},
+\end{equation}
+and combines a common log-normal factor with componentwise log-normal factors.
+
+\subsection{ES crossover}
+For each child, the ES crossover routine samples two parents independently from the current population. The child initially copies the first parent, after which crossover is applied with probability $p_c$. The four supported modes differ in whether solution coordinates and strategy parameters are inherited discretely or averaged.
+
+For example, average crossover for the decision vector gives
+\begin{equation}
+x^{(c)}=\frac{x^{(1)}+x^{(2)}}{2}.
+\end{equation}
+Discrete crossover uses Bernoulli masks $b_i\in\{0,1\}$ and
+\begin{equation}
+x_i^{(c)}=b_i x_i^{(1)}+(1-b_i)x_i^{(2)}.
+\end{equation}
+The source extends the same idea to strategy parameters, using a matrix-valued antisymmetry mask for the correlated $\alpha$ representation so that the resulting matrix remains antisymmetric.
+
+\subsection{ES mutation and bounds}
+Each child is mutated independently with probability $p_m$. For the one-step model,
+\begin{equation}
+\Sigma=\sigma' I_d,
+\end{equation}
+whereas for the $n$-step model,
+\begin{equation}
+\Sigma=\operatorname{diag}(\boldsymbol{\sigma}').
+\end{equation}
+The correlated branch updates the scale vector and angle-like matrix using log-normal and Gaussian perturbations, respectively. The code then constructs \emph{only} $\diag(\boldsymbol{\sigma}')$ as the covariance passed to the multivariate normal sampler.
+
+This is a key fidelity detail. The implementation explicitly preserves $\alpha$, but it does not construct a rotated covariance matrix from $\alpha$. Therefore the operational mutation distribution in the submitted Python code is still diagonal. The representation is ``correlated'' in the sense that angle parameters are maintained and mutated, but the current implementation does not use those angles to generate correlated Gaussian directions. A reader should not describe the code as implementing a full covariance-rotation ES without qualification.
+
+The final variable update is clipped:
+\begin{equation}
+x' = \min\{u,\max\{\ell,x+\varepsilon\}\},
+\end{equation}
+componentwise. Clipping guarantees box feasibility after each mutation but also changes the effective sampling distribution near the boundary.
+
+\subsection{ES survivor selection and stopping}
+Given population size $\mu$ and offspring count $\lambda$, the code sorts candidates by objective value and keeps the best $\mu$. For $(\mu,\lambda)$ replacement only the offspring compete; for $(\mu+\lambda)$ replacement parents are included. The best objective after each generation is recorded, and execution terminates early if
+\begin{equation}
+f(x_{\mathrm{best}})\leq \tau_f,
+\end{equation}
+where the default threshold is $0.1$.
+
+\subsection{Repeated ES execution}
+The repeated ES workflow calls the single-run engine with seeds $s,s+1,\ldots,s+r-1$. It collects the number of iterations executed in each run, counts threshold-reaching runs, and reports the sample mean and sample standard deviation of the iteration counts. The standard deviation uses \code{ddof=1}, so it is the usual unbiased sample standard deviation when multiple runs are available.
+
+\subsection{TSP cost and fitness}
+The TSP route cost closes the tour explicitly by shifting the route one position with \code{np.roll}. If a route is $\pi$, the implementation evaluates every edge $(\pi_i,\pi_{i+1})$ with the wrap-around convention $\pi_{n+1}=\pi_1$. The fitness is then the reciprocal of the cost.
+
+This choice makes high fitness equivalent to low route length, but it also introduces the expected numerical hazard at zero cost. The implementation guards against divide-by-zero warnings when computing fitness, yet the underlying reciprocal remains conceptually singular. For a valid non-degenerate TSP instance with positive inter-city distances, the normal operating regime is strictly positive cost.
+
+\subsection{Permutation crossover}
+The implementation includes multiple crossover operators because permutations require feasibility-preserving recombination.
+
+\textbf{PMX.} A segment from one parent is copied directly and mapping relationships are used to fill the remainder. This preserves a permutation while maintaining position-level information from both parents.
+
+\textbf{Order-1 crossover.} A segment from one parent is copied, and the remaining positions are filled in the cyclic order induced by the other parent, skipping values already present. This preserves relative order information.
+
+\textbf{Cycle crossover.} The code constructs position cycles between the two parents and alternates parent sources across cycles. Because each value occurs exactly once in each parent, the cycle mapping is well-defined for valid permutations.
+
+\textbf{MOX.} The implementation selects a single cut point, preserves the prefix from each parent, and completes each child with values from the opposite parent while skipping duplicates. This is a compact permutation-safe recombination scheme.
+
+The workflow-level defaults use Order-1 crossover, but the general engine retains the other operators for comparative experimentation.
+
+\subsection{Permutation mutation}
+All mutation functions begin by selecting two cut points. Swap exchanges the selected positions. Insert moves one value into the interval beginning at the first cut. Inversion reverses the selected segment, while scramble randomly permutes that segment. These operators have different locality properties: inversion is structured and often changes a contiguous sub-tour, whereas scramble introduces greater local disruption.
+
+\subsection{Parent selection}
+Tournament selection samples $k=\lfloor 0.5n\rfloor$ candidates without replacement, with a minimum of one, and returns the candidate with maximum fitness. Roulette-style selection first shifts the fitness values by their maximum, exponentiates the shifted values, and normalizes them. Specifically,
+\begin{equation}
+w_i=\exp\left(\operatorname{clip}(F_i-F_{\max},-700,0)\right),
+\qquad
+p_i=\frac{w_i}{\sum_j w_j}.
+\end{equation}
+The shift improves numerical stability by preventing unnecessary overflow. Truncation selection samples uniformly from the top half of the population, while full-random selection ignores fitness entirely.
+
+The workflow configuration uses tournament selection. With a half-population tournament, selection pressure is substantial: the best individual among a comparatively large sampled subset is favored each time a parent is required. This can accelerate exploitation but also reduce diversity when combined with strong elitist replacement.
+
+\subsection{TSP survivor replacement}
+The TSP survivor function mirrors the ES design. In parent-plus-child mode, the candidate pool is the vertical concatenation of parents and offspring. In child-only mode, only offspring are available. The new population is then filled by repeatedly calling the configured parent-selection method on the candidate pool itself.
+
+This is slightly different from deterministic ``keep the best $\mu$'' replacement: selection is stochastic because \code{select\_one} is called repeatedly. Consequently, even when the candidate pool is fixed, repeated sampling can produce a new population that is not simply the top $\mu$ individuals. The exact behavior depends on the selected selection mode.
+
+\subsection{TSP stopping and repeated workflows}
+The main TSP loop records best fitness, best cost, and best route at every iteration. It may stop early if a fitness threshold is configured. The repeated workflow for the six-city validation matrix uses such a threshold condition in addition to a route-cost based break. In the general engine, however, the stop criterion is expressed in terms of fitness, so the interpretation of any threshold must account for the reciprocal transformation.
+
+\section{Mathematical Formulation}
+\subsection{Unified ES view}
+The ES can be summarized as a state transition over pairs $(x,\eta)$. Let $P_t=\{(x_i,\eta_i)\}_{i=1}^{\mu}$. Each generation creates $\lambda$ children by selecting parent pairs, applying a crossover operator $\mathcal{C}$ with probability $p_c$, and applying a mutation operator $\mathcal{M}$ with probability $p_m$:
+\begin{equation}
+(x_j',\eta_j')=\mathcal{M}\left(\mathcal{C}\left((x_a,\eta_a),(x_b,\eta_b)\right)\right).
+\end{equation}
+The children are evaluated under $f$, and the survivor map $\mathcal{S}$ yields
+\begin{equation}
+P_{t+1}=\mathcal{S}(P_t,C_t).
+\end{equation}
+This abstraction covers the concrete branching without suppressing the implementation-specific choices.
+
+\subsection{TSP as permutation optimization}
+For $n$ cities, the search space contains $n!$ raw permutations, with rotational and sometimes reverse symmetries in the tour representation. The implementation does not explicitly canonicalize routes during evolutionary search. Instead, it relies on permutation-preserving operators and validates that candidate routes contain each city exactly once.
+
+The objective is
+\begin{equation}
+\min_{\pi\in\mathfrak{S}_n} C(\pi),
+\end{equation}
+where $\mathfrak{S}_n$ denotes the set of permutations of the $n$ city identifiers. The code's reciprocal fitness converts this into the equivalent maximization problem
+\begin{equation}
+\max_{\pi\in\mathfrak{S}_n} F(\pi),
+\qquad F(\pi)=C(\pi)^{-1}.
+\end{equation}
+
+\subsection{Exact validation on small TSP instances}
+The brute-force verifier enumerates permutations of cities $1,\ldots,n-1$ while fixing city 0 as the first city. Its worst-case enumeration count is
+\begin{equation}
+(n-1)!.
+\end{equation}
+The function is therefore explicitly limited to $n\leq 10$. Fixing the first city removes rotational duplicates but does not otherwise alter the closed-tour optimization problem.
+
+\section{Optimization and Learning Procedure}
+The source is not a gradient-based learning system. Its ``learning'' behavior is entirely population based and derivative free. The adaptive quantities are mutation scales rather than gradients or neural-network weights.
+
+\subsection{Initialization and scale adaptation}
+The log-normal updates used in the mutation routines are consistent with the common design principle of self-adaptive ES step sizes: a positive scale is multiplied by a stochastic factor, which preserves positivity without requiring explicit projection onto the positive half-line. The one-step, $n$-step, and correlated branches differ in how many scale parameters are maintained and how those parameters are inherited.
+
+\subsection{Selection pressure and replacement}
+The default ES survivor configuration is offspring-only replacement. Because parents are discarded before survivor ranking, a parent that was excellent in the previous generation can disappear if its descendants do not preserve comparable quality. This is a standard consequence of $(\mu,\lambda)$ replacement and should be treated as an algorithmic characteristic rather than a bug.
+
+The default TSP survivor configuration uses the same conceptual offspring-only scheme, but candidate selection is stochastic rather than a direct sort. That distinction affects how selection pressure is realized. In tournament mode the best of a sampled subset wins, whereas roulette-style selection biases probabilities continuously.
+
+\subsection{Objective thresholds}
+The ES stopping condition uses an absolute objective threshold. This makes sense for a benchmark function with a known target scale, but it is inherently objective-dependent. The TSP code uses fitness thresholds, so a condition such as $F\geq 6$ corresponds to a cost target of $C\leq 1/6$, not a route length of 6. The source also contains a six-city-specific cost threshold in a workflow wrapper; this is intentionally different from the generic fitness threshold mechanism and should not be conflated with it.
+
+\section{Implementation Details}
+\subsection{Software dependencies}
+NumPy supplies arrays, random generators, vectorized distance calculations, numerical norms, and permutation operations. pandas is used mainly for tabular history export, and Matplotlib is used to generate convergence figures as part of the source's artifact pipeline. JSON serialization provides machine-readable summaries. The source also contains imports for \code{argparse}, \code{csv}, and \code{os}, but these are not central to the executed workflow shown in the file.
+
+SciPy and PyTorch are not required by the optimization kernels. They are probed opportunistically only for runtime metadata. This is a useful separation because it keeps the core computational path lightweight while allowing richer environment reporting when those libraries are present.
+
+\subsection{Copy semantics and mutable state}
+The ES code takes special care with NumPy arrays in strategy-parameter dictionaries. \code{\_copy\_parameter} makes explicit copies of arrays instead of returning references to parent state. This avoids aliasing when a child later mutates its strategy parameters. Such copying is especially important in a population implementation where arrays are mutable and are reused across generations.
+
+\subsection{Serialization}
+ES summaries exclude history arrays from the primary JSON summary and place them in CSV format when available. TSP results use a dedicated route CSV plus a JSON summary and optional history CSV. The result collector then builds a manifest identifying artifact type, relative path, size, and creation status before generating a ZIP archive.
+
+This artifact separation is sensible for reproducibility: scalar metadata remains easy to parse, longer per-iteration histories are tabular, and binary or visualization files can be packaged separately. The current report does not reproduce any of those artifacts because the reporting requirement is code understanding rather than experiment output presentation.
+
+\subsection{Colab portability}
+The \code{is\_colab} helper tests whether \code{google.colab} is importable. The final export stage triggers the Colab download API only when the notebook is actually running in Colab. Outside Colab it still produces the ZIP locally. This makes the script less dependent on a single execution environment.
+
+\section{Execution Workflow}
+The bottom portion of the source acts like a notebook driver. It sets \code{BASE\_DIR}, \code{OUTPUT\_ROOT}, and a seed, constructs the six-city validation distance matrix, runs the four bounded workflows, and then calls \code{run\_workflows} followed by \code{collect\_and\_zip\_results}.
+
+Inside \code{run\_workflows}, the program creates the output directory and seeds the global random sources. It records runtime metadata, stores the workflow inventory, and calls \code{make\_validation\_results}. It then writes the preserved original-scale configurations to JSON without executing those configurations by default.
+
+The validation driver is layered. It first exercises all three ES mutation families, then executes the two ES workflow wrappers, then performs a small exact TSP consistency check, then executes the two TSP workflow wrappers. Finally, it attempts a forensic comparison against source-archive TSP output files if they happen to be present under the base directory. Missing source archives are handled explicitly as a non-validation condition rather than treated as an error that invalidates the rest of the notebook.
+
+This architecture is useful for a reconstruction task because the code does more than port the optimizer. It also creates checkpoints that test whether the reconstructed operators behave coherently and whether saved artifacts are internally consistent.
+
+\section{Design Decisions and Rationale}
+Several design choices are clear from the source even where their original motivation is not written as prose.
+
+First, the source preserves multiple alternative operators rather than simplifying to one canonical algorithm. That is consistent with the reconstruction objective: the Python file acts as a configurable representation of the MATLAB workflows rather than a minimal implementation of a single algorithm.
+
+Second, the default validation settings are deliberately smaller than the original-scale configurations. This suggests an intent to verify the computational path without imposing the cost of very large searches. The original-scale settings remain explicit and inspectable, which preserves provenance without making them the default execution burden.
+
+Third, the code favors NumPy array operations for vector arithmetic and distance construction. In \code{euclidean\_distance\_matrix}, broadcasting computes all pairwise coordinate differences in a compact vectorized form before reducing across the coordinate dimension. This is computationally convenient for moderate instance sizes, although the resulting matrix occupies $O(n^2)$ memory.
+
+Fourth, the source uses explicit validation functions instead of relying solely on successful execution. Route validity, finite values, dimension consistency, and exact small-instance optimization are all checked in dedicated routines. That is a strong engineering practice for a reconstruction whose main scientific risk is silent deviation from the original behavior.
+
+The correlated ES branch requires a more cautious interpretation. The presence of an angle matrix and angle updates indicates an intention to retain correlated-mutation state, but the actual covariance passed to the random sampler is diagonal. Therefore the implemented behavior is narrower than a full correlated Gaussian ES. The code comment itself recognizes this and states that the exact behavior is being preserved.
+
+\section{Computational Considerations}
+\subsection{Evolution Strategy cost}
+Let $d$ be the ES dimension, $\mu$ the parent population size, and $\lambda$ the number of children. One generation evaluates $\lambda$ children after crossover and mutation, so the dominant objective-evaluation count is $O(\lambda)$ times the cost of the objective. For the Ackley function, a straightforward vector cost is $O(d)$ per candidate, giving approximately
+\begin{equation}
+T_{\mathrm{Ackley,gen}}=O(\lambda d)
+\end{equation}
+for objective evaluation alone. Mutation in the correlated branch also creates a $d\times d$ Gaussian perturbation matrix and therefore has higher per-child storage and sampling overhead than a scalar or diagonal-scale representation.
+
+The ES configuration uses $\lambda=7\mu$, since \code{nc\_multiplier} is seven. This is a relatively offspring-heavy generation model: for every parent population of size $\mu$, seven times as many children are generated before replacement. That increases evaluation cost per generation but can provide more candidates for selection.
+
+\subsection{TSP cost}
+The TSP cost function is $O(n)$ per route once the distance matrix is available. For a population of size $N_p$, evaluating the population is $O(N_p n)$. The distance matrix itself requires $O(n^2)$ storage and $O(n^2)$ work to construct from coordinates.
+
+Permutation crossover and the mutation operators are generally $O(n)$ for one pair or one route, although the PMX and cycle implementations contain repeated position searches that can add constant-factor overhead and can approach $O(n^2)$ behavior in the worst case for naive search through parent arrays. The exact effective cost depends on the route length and branch taken.
+
+The exact brute-force verifier is factorial:
+\begin{equation}
+T_{\mathrm{exact}}(n)=O((n-1)!\,n),
+\end{equation}
+when each permutation is evaluated with an $O(n)$ route-cost calculation. The explicit $n\leq 10$ limit is therefore a necessary safeguard for the intended validation role.
+
+\subsection{Memory behavior}
+The main persistent TSP memory object is the $n\times n$ distance matrix. Histories can also become significant if thousands of iterations are stored with full routes. In the source, each TSP history entry stores the best route for the iteration, giving $O(Tn)$ history storage across $T$ iterations. ES history stores objective values and best vectors, leading to $O(Td)$ storage for best-variable history.
+
+Because the default validation modes are bounded, this history cost is manageable. The original-scale configuration of 200,000 ES iterations would make history retention materially more expensive, which is one reason the source's option to disable history recording is technically relevant.
+
+\section{Reproducibility and Reliability}
+The source contains several positive reproducibility mechanisms. Explicit seeds are passed into each run, runtime versions are serialized, original-scale configurations are preserved, and validation results are written to machine-readable files. The repeated-run wrappers use deterministic seed offsets, making the set of runs reconstructible from a base seed and a count.
+
+The architecture nevertheless has limits. Exact NumPy random-stream reproducibility can depend on the generator and software implementation, although the optimization kernels consistently use \code{numpy.random.default\_rng}. Hardware acceleration does not directly affect these kernels because no GPU-based computation is used. Runtime metadata reduces ambiguity but does not pin package versions or provide a complete dependency lockfile.
+
+The strongest reliability feature is exact validation on a tiny TSP instance. It does not establish global optimality for the evolutionary solver in general; instead, it provides a direct reference point for an instance small enough to enumerate exhaustively. That is the appropriate role for this type of validator.
+
+A second reliability feature is the forensic comparison with saved route outputs when the original project files are available. The code recomputes costs using its Euclidean-distance convention and compares them with the stored values. The submitted file alone cannot complete this check because the referenced archive files are not included as hidden inputs. When they are absent, the source records a ``NOT VALIDATED'' state.
+
+\section{Limitations and Technical Considerations}
+\subsection{Syntactic execution defect in the submitted file}
+The most immediate issue is purely syntactic. The source contains several top-level string literals before \code{from \_future\_ import annotations}. In Python, future imports must appear at the beginning of the module, after the module docstring and before ordinary executable statements. Because the additional strings are ordinary expressions rather than comments or the module docstring, the submitted file raises a \code{SyntaxError} before any workflow can run.
+
+This defect is independent of the optimization algorithms. The body of the file can still be analyzed and, as an engineering matter, executed after relocating or removing the future import. The report treats the source as submitted and does not silently claim that it is directly runnable.
+
+\subsection{Correlation state without covariance rotation}
+As noted above, the correlated mutation branch maintains $\alpha$ but draws noise from $\diag(\sigma)$. A full correlated ES would normally derive a non-diagonal covariance or rotation from the angle parameters. The current implementation therefore has a mismatch between the stored strategy state and the distribution actually sampled.
+
+From a reconstruction perspective, this may reflect fidelity to the source behavior. From an algorithmic perspective, however, the operational mutation remains diagonal. A future extension that implements true correlated Gaussian mutation should change the covariance construction and validate that change independently.
+
+\subsection{Terminology encoded as identifiers}
+Several configuration identifiers contain spelling variants such as \code{tournoment}, \code{roletwheel}, \code{trancation}, and \code{landa\_va\_mua}. The program handles them consistently internally, so they are functional identifiers rather than runtime errors. Nevertheless, they reduce readability and interoperability with external documentation. A future cleanup could introduce standardized names while retaining aliases for backward compatibility.
+
+\subsection{Distance convention and TSPLIB semantics}
+The parser records \code{EDGE\_WEIGHT\_TYPE} but the active coordinate-based distance routine always computes raw Euclidean distances. The code therefore does not implement the full range of TSPLIB edge-weight conventions merely because it parses the field. This distinction matters if the parser is later applied to instances whose official distance semantics are not raw Euclidean coordinates.
+
+\subsection{Fitness reciprocity}
+Using $1/C$ is simple and monotone, but it can compress or amplify selection differences depending on the cost scale. It also makes threshold parameters less intuitive because the numerical scale is inverted. A direct minimization interface could be clearer in a more general solver, although the current reciprocal mapping is valid for positive costs.
+
+\subsection{No complete dependency environment specification}
+The metadata records versions at runtime, but the source does not provide a lockfile, package constraints, or an environment manifest. Reproducibility is therefore stronger at the algorithmic and artifact levels than at the exact environment level.
+
+\section{Overall Technical Assessment}
+The implementation is technically coherent as a research-oriented reconstruction harness. Its strongest feature is the separation between algorithmic primitives and validation/export infrastructure. The configuration is rich enough to represent multiple evolutionary strategies without duplicating the core search loops, and the validation checks target failure modes relevant to code translation: malformed routes, inconsistent dimensions, non-finite values, and disagreement with exact small-instance optima.
+
+The ES side demonstrates several useful concepts: self-adaptive mutation scales, distinct one-step and $n$-step representations, crossover of both variables and strategy parameters, survivor replacement, bound handling, threshold termination, and repeated-run summaries. The TSP side adds the requirement for representation-aware genetic operators, since ordinary arithmetic recombination would not preserve permutation validity.
+
+The main weaknesses are implementation-level rather than conceptual. The submitted file contains the future-import placement defect, the correlated ES branch does not use its angle matrix in the covariance, and the general TSP parser accepts an edge-weight type without using it to choose the distance convention. These points define the boundary between the intended design and the exact behavior of the submitted code.
+
+For an academic software portfolio, the project demonstrates several useful competencies: translating algorithms across languages, separating configuration from execution, recording reproducibility metadata, validating against exact reference solutions on small instances, and managing research artifacts. These strengths are best presented together with the limitations rather than as evidence of a more general optimizer than the implementation actually provides.
+
+\section{Conclusion}
+The submitted Python program reconstructs four evolutionary-optimization workflows across two problem classes: continuous benchmark optimization with Evolution Strategies and permutation optimization for the Traveling Salesman Problem. It is organized as a compact, reasonably modular research script. Configurations are represented as data classes, optimization kernels are separated from validation and serialization, and workflow wrappers preserve both bounded validation settings and the larger original configurations.
+
+Mathematically, the ES component maintains a solution vector and mutation strategy parameters, applies stochastic recombination and log-normal scale adaptation, draws Gaussian perturbations, enforces box constraints, and selects survivors through either parent-plus-child or child-only replacement. The TSP component represents tours as permutations, evaluates closed-tour length through a distance matrix, converts cost to reciprocal fitness, uses permutation-preserving crossover and local mutations, and performs stochastic selection and survivor construction.
+
+The reconstruction goes beyond a minimal algorithm translation by embedding reproducibility and forensic validation. Exact enumeration on a small TSP instance provides a useful ground truth, route structure is checked explicitly, and output artifacts include runtime metadata and manifests. At the same time, the submission should be interpreted precisely: the file has a Python syntax defect in the placement of the future import, the correlated ES state does not produce non-diagonal mutation covariance, and the TSPLIB edge-weight metadata does not control the Euclidean distance calculation.
+
+Taken as a whole, the project is a credible example of research-oriented scientific programming centered on algorithm reconstruction, validation, and reproducible execution. Its value lies less in proposing a novel optimizer than in showing the ability to inspect an existing computational workflow, preserve its important algorithmic choices, make the reconstruction configurable and testable, and document where it is faithful, approximate, or limited.
+
+\end{document}
