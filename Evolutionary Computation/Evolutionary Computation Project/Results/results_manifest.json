@@ -1,0 +1,221 @@
+{
+  "artifacts": [
+    {
+      "workflow_name": "summary",
+      "artifact_name": "original_configurations.json",
+      "artifact_type": "json",
+      "file_path": "summary/original_configurations.json",
+      "file_size_bytes": 633,
+      "creation_status": "created"
+    },
+    {
+      "workflow_name": "summary",
+      "artifact_name": "run_summary.json",
+      "artifact_type": "json",
+      "file_path": "summary/run_summary.json",
+      "file_size_bytes": 2473,
+      "creation_status": "created"
+    },
+    {
+      "workflow_name": "summary",
+      "artifact_name": "runtime_metadata.json",
+      "artifact_type": "json",
+      "file_path": "summary/runtime_metadata.json",
+      "file_size_bytes": 349,
+      "creation_status": "created"
+    },
+    {
+      "workflow_name": "summary",
+      "artifact_name": "validation_summary.json",
+      "artifact_type": "json",
+      "file_path": "summary/validation_summary.json",
+      "file_size_bytes": 1905,
+      "creation_status": "created"
+    },
+    {
+      "workflow_name": "summary",
+      "artifact_name": "workflow_inventory.json",
+      "artifact_type": "json",
+      "file_path": "summary/workflow_inventory.json",
+      "file_size_bytes": 1196,
+      "creation_status": "created"
+    },
+    {
+      "workflow_name": "workflow_01_es_main",
+      "artifact_name": "main_smoke_convergence.png",
+      "artifact_type": "image",
+      "file_path": "workflow_01_es_main/main_smoke_convergence.png",
+      "file_size_bytes": 46058,
+      "creation_status": "created"
+    },
+    {
+      "workflow_name": "workflow_01_es_main",
+      "artifact_name": "main_smoke_history.csv",
+      "artifact_type": "table",
+      "file_path": "workflow_01_es_main/main_smoke_history.csv",
+      "file_size_bytes": 2023,
+      "creation_status": "created"
+    },
+    {
+      "workflow_name": "workflow_01_es_main",
+      "artifact_name": "main_smoke_summary.json",
+      "artifact_type": "json",
+      "file_path": "workflow_01_es_main/main_smoke_summary.json",
+      "file_size_bytes": 620,
+      "creation_status": "created"
+    },
+    {
+      "workflow_name": "workflow_01_es_validation",
+      "artifact_name": "ackley_correlated_convergence.png",
+      "artifact_type": "image",
+      "file_path": "workflow_01_es_validation/ackley_correlated_convergence.png",
+      "file_size_bytes": 45012,
+      "creation_status": "created"
+    },
+    {
+      "workflow_name": "workflow_01_es_validation",
+      "artifact_name": "ackley_correlated_history.csv",
+      "artifact_type": "table",
+      "file_path": "workflow_01_es_validation/ackley_correlated_history.csv",
+      "file_size_bytes": 664,
+      "creation_status": "created"
+    },
+    {
+      "workflow_name": "workflow_01_es_validation",
+      "artifact_name": "ackley_correlated_summary.json",
+      "artifact_type": "json",
+      "file_path": "workflow_01_es_validation/ackley_correlated_summary.json",
+      "file_size_bytes": 616,
+      "creation_status": "created"
+    },
+    {
+      "workflow_name": "workflow_01_es_validation",
+      "artifact_name": "ackley_uncorrelated_1step_convergence.png",
+      "artifact_type": "image",
+      "file_path": "workflow_01_es_validation/ackley_uncorrelated_1step_convergence.png",
+      "file_size_bytes": 49082,
+      "creation_status": "created"
+    },
+    {
+      "workflow_name": "workflow_01_es_validation",
+      "artifact_name": "ackley_uncorrelated_1step_history.csv",
+      "artifact_type": "table",
+      "file_path": "workflow_01_es_validation/ackley_uncorrelated_1step_history.csv",
+      "file_size_bytes": 658,
+      "creation_status": "created"
+    },
+    {
+      "workflow_name": "workflow_01_es_validation",
+      "artifact_name": "ackley_uncorrelated_1step_summary.json",
+      "artifact_type": "json",
+      "file_path": "workflow_01_es_validation/ackley_uncorrelated_1step_summary.json",
+      "file_size_bytes": 624,
+      "creation_status": "created"
+    },
+    {
+      "workflow_name": "workflow_01_es_validation",
+      "artifact_name": "ackley_uncorrelated_nstep_convergence.png",
+      "artifact_type": "image",
+      "file_path": "workflow_01_es_validation/ackley_uncorrelated_nstep_convergence.png",
+      "file_size_bytes": 44017,
+      "creation_status": "created"
+    },
+    {
+      "workflow_name": "workflow_01_es_validation",
+      "artifact_name": "ackley_uncorrelated_nstep_history.csv",
+      "artifact_type": "table",
+      "file_path": "workflow_01_es_validation/ackley_uncorrelated_nstep_history.csv",
+      "file_size_bytes": 662,
+      "creation_status": "created"
+    },
+    {
+      "workflow_name": "workflow_01_es_validation",
+      "artifact_name": "ackley_uncorrelated_nstep_summary.json",
+      "artifact_type": "json",
+      "file_path": "workflow_01_es_validation/ackley_uncorrelated_nstep_summary.json",
+      "file_size_bytes": 623,
+      "creation_status": "created"
+    },
+    {
+      "workflow_name": "workflow_02_es_repeated",
+      "artifact_name": "repeated_summary.json",
+      "artifact_type": "json",
+      "file_path": "workflow_02_es_repeated/repeated_summary.json",
+      "file_size_bytes": 301303,
+      "creation_status": "created"
+    },
+    {
+      "workflow_name": "workflow_02_tsp_validation",
+      "artifact_name": "six_city_demo_best_route.csv",
+      "artifact_type": "table",
+      "file_path": "workflow_02_tsp_validation/six_city_demo_best_route.csv",
+      "file_size_bytes": 12,
+      "creation_status": "created"
+    },
+    {
+      "workflow_name": "workflow_02_tsp_validation",
+      "artifact_name": "six_city_demo_convergence.png",
+      "artifact_type": "image",
+      "file_path": "workflow_02_tsp_validation/six_city_demo_convergence.png",
+      "file_size_bytes": 35637,
+      "creation_status": "created"
+    },
+    {
+      "workflow_name": "workflow_02_tsp_validation",
+      "artifact_name": "six_city_demo_history.csv",
+      "artifact_type": "table",
+      "file_path": "workflow_02_tsp_validation/six_city_demo_history.csv",
+      "file_size_bytes": 573,
+      "creation_status": "created"
+    },
+    {
+      "workflow_name": "workflow_02_tsp_validation",
+      "artifact_name": "six_city_demo_summary.json",
+      "artifact_type": "json",
+      "file_path": "workflow_02_tsp_validation/six_city_demo_summary.json",
+      "file_size_bytes": 734,
+      "creation_status": "created"
+    },
+    {
+      "workflow_name": "workflow_03_tsp_main",
+      "artifact_name": "main_smoke_best_route.csv",
+      "artifact_type": "table",
+      "file_path": "workflow_03_tsp_main/main_smoke_best_route.csv",
+      "file_size_bytes": 12,
+      "creation_status": "created"
+    },
+    {
+      "workflow_name": "workflow_03_tsp_main",
+      "artifact_name": "main_smoke_convergence.png",
+      "artifact_type": "image",
+      "file_path": "workflow_03_tsp_main/main_smoke_convergence.png",
+      "file_size_bytes": 35036,
+      "creation_status": "created"
+    },
+    {
+      "workflow_name": "workflow_03_tsp_main",
+      "artifact_name": "main_smoke_history.csv",
+      "artifact_type": "table",
+      "file_path": "workflow_03_tsp_main/main_smoke_history.csv",
+      "file_size_bytes": 576,
+      "creation_status": "created"
+    },
+    {
+      "workflow_name": "workflow_03_tsp_main",
+      "artifact_name": "main_smoke_summary.json",
+      "artifact_type": "json",
+      "file_path": "workflow_03_tsp_main/main_smoke_summary.json",
+      "file_size_bytes": 735,
+      "creation_status": "created"
+    },
+    {
+      "workflow_name": "workflow_04_tsp_repeated",
+      "artifact_name": "repeated_summary.json",
+      "artifact_type": "json",
+      "file_path": "workflow_04_tsp_repeated/repeated_summary.json",
+      "file_size_bytes": 362012,
+      "creation_status": "created"
+    }
+  ],
+  "source_root": "."
+}

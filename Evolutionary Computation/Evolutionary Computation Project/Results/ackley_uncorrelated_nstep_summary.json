@@ -1,0 +1,28 @@
+{
+  "config": {
+    "n_population": 10,
+    "var_length": 5,
+    "iteration": 30,
+    "pc": 0.3,
+    "pm": 0.9,
+    "var_min": -30,
+    "var_max": 30,
+    "nc_multiplier": 7,
+    "crossover_mode": "avg_discrete",
+    "survivor_mode": "landa_va_mua",
+    "mutation_method": "uncorrelated_nstep",
+    "threshold": 0.1
+  },
+  "seed": 12346,
+  "objective": "ackley",
+  "iterations_executed": 30,
+  "best_initial_cost": 18.839947583064564,
+  "best_cost": 0.5825862765327341,
+  "best_variable": [
+    -0.1091759581585294,
+    -0.0587397402418908,
+    0.10241145243089618,
+    0.050144557783822596,
+    -0.016245408019146555
+  ]
+}

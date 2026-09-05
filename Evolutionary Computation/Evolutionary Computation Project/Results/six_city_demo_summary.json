@@ -1,0 +1,42 @@
+{
+  "config": {
+    "n_population": 10,
+    "iterations": 80,
+    "pc": 0.8,
+    "pm": 0.2,
+    "n_children": 20,
+    "crossover_mode": "Order_1_crossover",
+    "mutation_mode": "swap",
+    "selection_mode": "tournoment",
+    "survivor_mode": "landa_va_mua",
+    "stop_at_fitness": null
+  },
+  "seed": 12355,
+  "dimension": 6,
+  "initial_route": [
+    5,
+    4,
+    1,
+    2,
+    3,
+    0
+  ],
+  "iterations_executed": 80,
+  "best_fitness": 0.16666666666666666,
+  "best_cost": 6.0,
+  "best_route": [
+    5,
+    4,
+    3,
+    2,
+    1,
+    0
+  ],
+  "elapsed_seconds": 0.2571089267730713,
+  "route_validation": {
+    "length": 6,
+    "expected_length": 6,
+    "contains_all_city_ids_0_to_n_minus_1": true,
+    "duplicate_count": 0
+  }
+}

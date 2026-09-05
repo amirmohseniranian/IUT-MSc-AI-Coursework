@@ -1,0 +1,28 @@
+{
+  "ES_main_original": {
+    "n_population": 50,
+    "var_length": 10,
+    "iteration": 200000,
+    "pc": 0.3,
+    "pm": 0.9,
+    "var_min": -10,
+    "var_max": 10,
+    "nc_multiplier": 7,
+    "crossover_mode": "avg_discrete",
+    "survivor_mode": "landa_va_mua",
+    "mutation_method": "correlated",
+    "threshold": 0.1
+  },
+  "TSP_main_original": {
+    "n_population": 50,
+    "iterations": 10000,
+    "pc": 0.8,
+    "pm": 0.2,
+    "n_children": 150,
+    "crossover_mode": "Order_1_crossover",
+    "mutation_mode": "swap",
+    "selection_mode": "tournoment",
+    "survivor_mode": "landa_va_mua",
+    "stop_at_fitness": null
+  }
+}

@@ -1,0 +1,34 @@
+[
+  {
+    "id": "Workflow 1",
+    "name": "Evolution Strategy - Main Single Run",
+    "source": [
+      "ES_Eshraghi_Sharifi/code/main.m"
+    ],
+    "description": "Self-adaptive ES with configurable crossover, mutation strategy, survivor selection, and Ackley objective."
+  },
+  {
+    "id": "Workflow 2",
+    "name": "Evolution Strategy - Repeated Runs",
+    "source": [
+      "ES_Eshraghi_Sharifi/code/main_iterative.m"
+    ],
+    "description": "Twenty independent ES runs in the supplied MATLAB implementation, summarized by mean iterations to threshold."
+  },
+  {
+    "id": "Workflow 3",
+    "name": "Traveling Salesman Problem - Main Single Run",
+    "source": [
+      "TSP_Eshraghi_Sharifi/code/main.m"
+    ],
+    "description": "Permutation evolutionary search using OX-1 crossover, swap mutation, tournament selection, and lambda-mu survivor selection."
+  },
+  {
+    "id": "Workflow 4",
+    "name": "Traveling Salesman Problem - Repeated Runs",
+    "source": [
+      "TSP_Eshraghi_Sharifi/code/main_iterative.m"
+    ],
+    "description": "Thirty independent TSP runs driven by data.txt in the supplied MATLAB code; workbook output is replaced by portable per-run CSV/JSON exports."
+  }
+]

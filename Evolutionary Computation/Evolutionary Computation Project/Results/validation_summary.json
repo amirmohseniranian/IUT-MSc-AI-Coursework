@@ -1,0 +1,70 @@
+{
+  "seed": 12345,
+  "checks": [
+    {
+      "workflow": "ES mutation-family smoke validation",
+      "status": "VALIDATED",
+      "runs": {
+        "uncorrelated_1step": {
+          "iterations_executed": 30,
+          "best_cost": 0.38776401193718657,
+          "finite": true,
+          "variable_length": true
+        },
+        "uncorrelated_nstep": {
+          "iterations_executed": 30,
+          "best_cost": 0.5825862765327341,
+          "finite": true,
+          "variable_length": true
+        },
+        "correlated": {
+          "iterations_executed": 30,
+          "best_cost": 0.47577311469907757,
+          "finite": true,
+          "variable_length": true
+        }
+      }
+    },
+    {
+      "workflow": "Workflow 1 - ES main",
+      "status": "VALIDATED",
+      "iterations_executed": 91,
+      "best_cost": 0.08594946081969512
+    },
+    {
+      "workflow": "Workflow 2 - ES repeated",
+      "status": "VALIDATED",
+      "count": 20,
+      "mean_iterations": 69.25
+    },
+    {
+      "workflow": "TSP six-city exact-consistency validation",
+      "status": "VALIDATED",
+      "exact_optimum_cost": 6.0,
+      "observed_best_cost": 6.0,
+      "route_validation": {
+        "length": 6,
+        "expected_length": 6,
+        "contains_all_city_ids_0_to_n_minus_1": true,
+        "duplicate_count": 0
+      }
+    },
+    {
+      "workflow": "Workflow 3 - TSP main",
+      "status": "VALIDATED",
+      "best_cost": 6.0
+    },
+    {
+      "workflow": "Workflow 4 - TSP repeated",
+      "status": "VALIDATED",
+      "count_executed": 30,
+      "mean_iterations": 80.0
+    },
+    {
+      "workflow": "Supplied TSP output-file forensic validation",
+      "status": "NOT VALIDATED",
+      "reason": "Could not locate city1.tsp under .",
+      "note": "The source archives were available during reconstruction but are not assumed to be hidden inputs in the standalone Colab notebook."
+    }
+  ]
+}
