@@ -1,0 +1,2 @@
+overall_error_rate,overall_error_percent,total_misclassified,class_1_error_rate,class_1_error_percent,class_2_error_rate,class_2_error_percent,class_3_error_rate,class_3_error_percent
+0.02666666666666667,2.666666666666667,4,0.0,0.0,0.06,6.0,0.02,2.0

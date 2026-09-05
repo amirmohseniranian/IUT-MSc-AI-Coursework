@@ -1,0 +1,8 @@
+section,dataset,method,scenario,overall_error_percent,total_misclassified
+Exercise 1,Textbook Gaussian simulation,BME,"mu2_[1.5,1.5]",27.0,54
+Exercise 1,Textbook Gaussian simulation,BMR,"mu2_[1.5,1.5]",26.0,52
+Exercise 1,Textbook Gaussian simulation,BME,"mu2_[3.0,3.0]",0.0,0
+Exercise 1,Textbook Gaussian simulation,BMR,"mu2_[3.0,3.0]",0.0,0
+Exercise 2a,Iris,BME + 150-fold LOO,All 150 samples,2.666666666666667,4
+Exercise 2b,Liquid-equivalent Wine subset,BME + 178-fold LOO,178 samples,8.98876404494382,16
+Exercise 2c,Normal,BME train/test,1000 test samples,7.7,77

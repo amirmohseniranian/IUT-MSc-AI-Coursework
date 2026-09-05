@@ -1,0 +1,5 @@
+scenario,mu2_x,mu2_y,method,overall_error_rate,overall_error_percent,class_1_error_rate,class_1_error_percent,class_2_error_rate,class_2_error_percent,overall_accuracy,total_misclassified,theoretical_BME_error_rate,theoretical_BME_error_percent
+"mu2_[1.5,1.5]",1.5,1.5,BME,0.27,27.0,0.29,28.999999999999996,0.25,25.0,0.73,54,0.21459765022017463,21.459765022017464
+"mu2_[1.5,1.5]",1.5,1.5,BMR,0.26,26.0,0.41,41.0,0.11,11.0,0.74,52,0.21459765022017463,21.459765022017464
+"mu2_[3.0,3.0]",3.0,3.0,BME,0.0,0.0,0.0,0.0,0.0,0.0,1.0,0,0.000782701129001274,0.07827011290012739
+"mu2_[3.0,3.0]",3.0,3.0,BMR,0.0,0.0,0.0,0.0,0.0,0.0,1.0,0,0.000782701129001274,0.07827011290012739
