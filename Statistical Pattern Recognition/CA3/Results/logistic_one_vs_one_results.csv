@@ -1,0 +1,7 @@
+pair,positive_class,negative_class,training_accuracy,iterations,converged,final_loss
+omega1 vs omega2,omega1,omega2,1.0,10000,False,0.005305253963169389
+omega1 vs omega3,omega1,omega3,0.9,962,True,0.3256181783006247
+omega1 vs omega4,omega1,omega4,1.0,10000,False,0.029952139072282846
+omega2 vs omega3,omega2,omega3,1.0,10000,False,0.002468547335004871
+omega2 vs omega4,omega2,omega4,1.0,10000,False,0.006053547055202816
+omega3 vs omega4,omega3,omega4,1.0,10000,False,0.007357992260164774

@@ -1,0 +1,5 @@
+classifier,target_class,training_accuracy,iterations,converged,final_loss
+omega1 vs not omega1,omega1,0.75,444,True,0.489403115654018
+omega2 vs not omega2,omega2,0.925,4157,True,0.21519478390388086
+omega3 vs not omega3,omega3,0.925,1245,True,0.3132366370228864
+omega4 vs not omega4,omega4,1.0,10000,False,0.01774975294973683

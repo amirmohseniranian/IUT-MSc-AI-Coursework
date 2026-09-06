@@ -1,0 +1,3 @@
+case,positive_class,negative_class,training_accuracy,w_x1,w_x2,bias
+omega1 vs omega2,omega1,omega2,0.95,-0.33391921600076035,0.28785693487557096,0.7826412336099767
+omega3 vs omega2,omega3,omega2,0.95,-0.1798772156420937,0.1370134344828,0.029770817234725244

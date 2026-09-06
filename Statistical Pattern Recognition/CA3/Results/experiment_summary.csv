@@ -1,0 +1,7 @@
+experiment,metric,value
+Perceptron omega1 vs omega2,iterations_to_convergence,9.0
+Perceptron omega3 vs omega2,iterations_to_convergence,5.0
+Least squares omega1 vs omega2,training_accuracy,0.95
+Least squares omega3 vs omega2,training_accuracy,0.95
+Logistic one-vs-rest,mean_binary_training_accuracy,0.9
+Logistic one-vs-one,mean_pairwise_training_accuracy,0.9833333333333334
