@@ -1,0 +1,522 @@
+{
+  "scenario_1": {
+    "start": [
+      0.0,
+      0.0
+    ],
+    "goal": [
+      6.0,
+      7.0
+    ],
+    "grid_size": [
+      10,
+      10
+    ],
+    "obstacles": [
+      {
+        "id": 0,
+        "base_x": 2.0,
+        "base_y": 2.5,
+        "radius": 0.6,
+        "amplitude_x": 0.0,
+        "amplitude_y": 0.0,
+        "frequency": 0.0,
+        "phase_shift": 0.0,
+        "is_dynamic": false
+      },
+      {
+        "id": 1,
+        "base_x": 4.0,
+        "base_y": 5.5,
+        "radius": 0.7,
+        "amplitude_x": 0.0,
+        "amplitude_y": 0.0,
+        "frequency": 0.0,
+        "phase_shift": 0.0,
+        "is_dynamic": false
+      },
+      {
+        "id": 2,
+        "base_x": 7.5,
+        "base_y": 4.0,
+        "radius": 0.6,
+        "amplitude_x": 0.0,
+        "amplitude_y": 0.0,
+        "frequency": 0.0,
+        "phase_shift": 0.0,
+        "is_dynamic": false
+      },
+      {
+        "id": 3,
+        "base_x": 3.0,
+        "base_y": 3.0,
+        "radius": 0.5,
+        "amplitude_x": 0.8,
+        "amplitude_y": 0.6,
+        "frequency": 0.15,
+        "phase_shift": 0.0,
+        "is_dynamic": true
+      },
+      {
+        "id": 4,
+        "base_x": 5.0,
+        "base_y": 4.0,
+        "radius": 0.5,
+        "amplitude_x": 0.6,
+        "amplitude_y": 0.9,
+        "frequency": 0.12,
+        "phase_shift": 0.7853981633974483,
+        "is_dynamic": true
+      },
+      {
+        "id": 5,
+        "base_x": 2.5,
+        "base_y": 6.0,
+        "radius": 0.5,
+        "amplitude_x": 0.7,
+        "amplitude_y": 0.5,
+        "frequency": 0.18,
+        "phase_shift": 1.5707963267948966,
+        "is_dynamic": true
+      },
+      {
+        "id": 6,
+        "base_x": 6.5,
+        "base_y": 6.5,
+        "radius": 0.5,
+        "amplitude_x": 0.5,
+        "amplitude_y": 0.7,
+        "frequency": 0.1,
+        "phase_shift": 1.0471975511965976,
+        "is_dynamic": true
+      },
+      {
+        "id": 7,
+        "base_x": 4.5,
+        "base_y": 2.0,
+        "radius": 0.5,
+        "amplitude_x": 0.9,
+        "amplitude_y": 0.4,
+        "frequency": 0.14,
+        "phase_shift": 0.5235987755982988,
+        "is_dynamic": true
+      }
+    ]
+  },
+  "scenario_2": {
+    "start": [
+      0.0,
+      0.0
+    ],
+    "goal": [
+      6.0,
+      7.0
+    ],
+    "grid_size": [
+      10,
+      10
+    ],
+    "obstacles": [
+      {
+        "id": 0,
+        "base_x": 2.0,
+        "base_y": 2.5,
+        "radius": 0.6,
+        "amplitude_x": 0.0,
+        "amplitude_y": 0.0,
+        "frequency": 0.0,
+        "phase_shift": 0.0,
+        "is_dynamic": false
+      },
+      {
+        "id": 1,
+        "base_x": 4.0,
+        "base_y": 5.5,
+        "radius": 0.7,
+        "amplitude_x": 0.0,
+        "amplitude_y": 0.0,
+        "frequency": 0.0,
+        "phase_shift": 0.0,
+        "is_dynamic": false
+      },
+      {
+        "id": 2,
+        "base_x": 7.5,
+        "base_y": 4.0,
+        "radius": 0.6,
+        "amplitude_x": 0.0,
+        "amplitude_y": 0.0,
+        "frequency": 0.0,
+        "phase_shift": 0.0,
+        "is_dynamic": false
+      },
+      {
+        "id": 3,
+        "base_x": 3.0,
+        "base_y": 3.0,
+        "radius": 0.5,
+        "amplitude_x": 0.8,
+        "amplitude_y": 0.6,
+        "frequency": 0.15,
+        "phase_shift": 0.0,
+        "is_dynamic": true
+      },
+      {
+        "id": 4,
+        "base_x": 5.0,
+        "base_y": 4.0,
+        "radius": 0.5,
+        "amplitude_x": 0.6,
+        "amplitude_y": 0.9,
+        "frequency": 0.12,
+        "phase_shift": 0.7853981633974483,
+        "is_dynamic": true
+      },
+      {
+        "id": 5,
+        "base_x": 2.5,
+        "base_y": 6.0,
+        "radius": 0.5,
+        "amplitude_x": 0.7,
+        "amplitude_y": 0.5,
+        "frequency": 0.18,
+        "phase_shift": 1.5707963267948966,
+        "is_dynamic": true
+      },
+      {
+        "id": 6,
+        "base_x": 6.5,
+        "base_y": 6.5,
+        "radius": 0.5,
+        "amplitude_x": 0.5,
+        "amplitude_y": 0.7,
+        "frequency": 0.1,
+        "phase_shift": 1.0471975511965976,
+        "is_dynamic": true
+      },
+      {
+        "id": 7,
+        "base_x": 4.5,
+        "base_y": 2.0,
+        "radius": 0.5,
+        "amplitude_x": 0.9,
+        "amplitude_y": 0.4,
+        "frequency": 0.14,
+        "phase_shift": 0.5235987755982988,
+        "is_dynamic": true
+      }
+    ]
+  },
+  "scenario_3": {
+    "start": [
+      0.0,
+      0.0
+    ],
+    "goal": [
+      6.0,
+      7.0
+    ],
+    "grid_size": [
+      10,
+      10
+    ],
+    "obstacles": [
+      {
+        "id": 0,
+        "base_x": 2.0,
+        "base_y": 2.5,
+        "radius": 0.6,
+        "amplitude_x": 0.0,
+        "amplitude_y": 0.0,
+        "frequency": 0.0,
+        "phase_shift": 0.0,
+        "is_dynamic": false
+      },
+      {
+        "id": 1,
+        "base_x": 4.0,
+        "base_y": 5.5,
+        "radius": 0.7,
+        "amplitude_x": 0.0,
+        "amplitude_y": 0.0,
+        "frequency": 0.0,
+        "phase_shift": 0.0,
+        "is_dynamic": false
+      },
+      {
+        "id": 2,
+        "base_x": 7.5,
+        "base_y": 4.0,
+        "radius": 0.6,
+        "amplitude_x": 0.0,
+        "amplitude_y": 0.0,
+        "frequency": 0.0,
+        "phase_shift": 0.0,
+        "is_dynamic": false
+      },
+      {
+        "id": 3,
+        "base_x": 3.0,
+        "base_y": 3.0,
+        "radius": 0.5,
+        "amplitude_x": 0.8,
+        "amplitude_y": 0.6,
+        "frequency": 0.15,
+        "phase_shift": 0.0,
+        "is_dynamic": true
+      },
+      {
+        "id": 4,
+        "base_x": 5.0,
+        "base_y": 4.0,
+        "radius": 0.5,
+        "amplitude_x": 0.6,
+        "amplitude_y": 0.9,
+        "frequency": 0.12,
+        "phase_shift": 0.7853981633974483,
+        "is_dynamic": true
+      },
+      {
+        "id": 5,
+        "base_x": 2.5,
+        "base_y": 6.0,
+        "radius": 0.5,
+        "amplitude_x": 0.7,
+        "amplitude_y": 0.5,
+        "frequency": 0.18,
+        "phase_shift": 1.5707963267948966,
+        "is_dynamic": true
+      },
+      {
+        "id": 6,
+        "base_x": 6.5,
+        "base_y": 6.5,
+        "radius": 0.5,
+        "amplitude_x": 0.5,
+        "amplitude_y": 0.7,
+        "frequency": 0.1,
+        "phase_shift": 1.0471975511965976,
+        "is_dynamic": true
+      },
+      {
+        "id": 7,
+        "base_x": 4.5,
+        "base_y": 2.0,
+        "radius": 0.5,
+        "amplitude_x": 0.9,
+        "amplitude_y": 0.4,
+        "frequency": 0.14,
+        "phase_shift": 0.5235987755982988,
+        "is_dynamic": true
+      }
+    ]
+  },
+  "scenario_4": {
+    "start": [
+      0.0,
+      0.0
+    ],
+    "goal": [
+      6.0,
+      7.0
+    ],
+    "grid_size": [
+      10,
+      10
+    ],
+    "obstacles": [
+      {
+        "id": 0,
+        "base_x": 2.0,
+        "base_y": 2.5,
+        "radius": 0.6,
+        "amplitude_x": 0.0,
+        "amplitude_y": 0.0,
+        "frequency": 0.0,
+        "phase_shift": 0.0,
+        "is_dynamic": false
+      },
+      {
+        "id": 1,
+        "base_x": 4.0,
+        "base_y": 5.5,
+        "radius": 0.7,
+        "amplitude_x": 0.0,
+        "amplitude_y": 0.0,
+        "frequency": 0.0,
+        "phase_shift": 0.0,
+        "is_dynamic": false
+      },
+      {
+        "id": 2,
+        "base_x": 7.5,
+        "base_y": 4.0,
+        "radius": 0.6,
+        "amplitude_x": 0.0,
+        "amplitude_y": 0.0,
+        "frequency": 0.0,
+        "phase_shift": 0.0,
+        "is_dynamic": false
+      },
+      {
+        "id": 3,
+        "base_x": 3.0,
+        "base_y": 3.0,
+        "radius": 0.5,
+        "amplitude_x": 0.8,
+        "amplitude_y": 0.6,
+        "frequency": 0.15,
+        "phase_shift": 0.0,
+        "is_dynamic": true
+      },
+      {
+        "id": 4,
+        "base_x": 5.0,
+        "base_y": 4.0,
+        "radius": 0.5,
+        "amplitude_x": 0.6,
+        "amplitude_y": 0.9,
+        "frequency": 0.12,
+        "phase_shift": 0.7853981633974483,
+        "is_dynamic": true
+      },
+      {
+        "id": 5,
+        "base_x": 2.5,
+        "base_y": 6.0,
+        "radius": 0.5,
+        "amplitude_x": 0.7,
+        "amplitude_y": 0.5,
+        "frequency": 0.18,
+        "phase_shift": 1.5707963267948966,
+        "is_dynamic": true
+      },
+      {
+        "id": 6,
+        "base_x": 6.5,
+        "base_y": 6.5,
+        "radius": 0.5,
+        "amplitude_x": 0.5,
+        "amplitude_y": 0.7,
+        "frequency": 0.1,
+        "phase_shift": 1.0471975511965976,
+        "is_dynamic": true
+      },
+      {
+        "id": 7,
+        "base_x": 4.5,
+        "base_y": 2.0,
+        "radius": 0.5,
+        "amplitude_x": 0.9,
+        "amplitude_y": 0.4,
+        "frequency": 0.14,
+        "phase_shift": 0.5235987755982988,
+        "is_dynamic": true
+      }
+    ]
+  },
+  "scenario_5": {
+    "start": [
+      0.0,
+      0.0
+    ],
+    "goal": [
+      6.0,
+      7.0
+    ],
+    "grid_size": [
+      10,
+      10
+    ],
+    "obstacles": [
+      {
+        "id": 0,
+        "base_x": 2.0,
+        "base_y": 2.5,
+        "radius": 0.6,
+        "amplitude_x": 0.0,
+        "amplitude_y": 0.0,
+        "frequency": 0.0,
+        "phase_shift": 0.0,
+        "is_dynamic": false
+      },
+      {
+        "id": 1,
+        "base_x": 4.0,
+        "base_y": 5.5,
+        "radius": 0.7,
+        "amplitude_x": 0.0,
+        "amplitude_y": 0.0,
+        "frequency": 0.0,
+        "phase_shift": 0.0,
+        "is_dynamic": false
+      },
+      {
+        "id": 2,
+        "base_x": 7.5,
+        "base_y": 4.0,
+        "radius": 0.6,
+        "amplitude_x": 0.0,
+        "amplitude_y": 0.0,
+        "frequency": 0.0,
+        "phase_shift": 0.0,
+        "is_dynamic": false
+      },
+      {
+        "id": 3,
+        "base_x": 3.0,
+        "base_y": 3.0,
+        "radius": 0.5,
+        "amplitude_x": 0.8,
+        "amplitude_y": 0.6,
+        "frequency": 0.15,
+        "phase_shift": 0.0,
+        "is_dynamic": true
+      },
+      {
+        "id": 4,
+        "base_x": 5.0,
+        "base_y": 4.0,
+        "radius": 0.5,
+        "amplitude_x": 0.6,
+        "amplitude_y": 0.9,
+        "frequency": 0.12,
+        "phase_shift": 0.7853981633974483,
+        "is_dynamic": true
+      },
+      {
+        "id": 5,
+        "base_x": 2.5,
+        "base_y": 6.0,
+        "radius": 0.5,
+        "amplitude_x": 0.7,
+        "amplitude_y": 0.5,
+        "frequency": 0.18,
+        "phase_shift": 1.5707963267948966,
+        "is_dynamic": true
+      },
+      {
+        "id": 6,
+        "base_x": 6.5,
+        "base_y": 6.5,
+        "radius": 0.5,
+        "amplitude_x": 0.5,
+        "amplitude_y": 0.7,
+        "frequency": 0.1,
+        "phase_shift": 1.0471975511965976,
+        "is_dynamic": true
+      },
+      {
+        "id": 7,
+        "base_x": 4.5,
+        "base_y": 2.0,
+        "radius": 0.5,
+        "amplitude_x": 0.9,
+        "amplitude_y": 0.4,
+        "frequency": 0.14,
+        "phase_shift": 0.5235987755982988,
+        "is_dynamic": true
+      }
+    ]
+  }
+}
