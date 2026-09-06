@@ -1,0 +1,383 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[a4paper,margin=27mm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{longtable}
+\hypersetup{colorlinks=true,linkcolor=black,urlcolor=black,citecolor=black}
+\setstretch{1.08}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\setlist[itemize]{leftmargin=18pt,itemsep=2pt,topsep=3pt}
+\setlist[enumerate]{leftmargin=20pt,itemsep=3pt,topsep=3pt}
+\pagestyle{fancy}
+\setlength{\headheight}{14pt}
+\fancyhf{}
+\lhead{Technical Report}
+\rhead{Manual Multilayer Perceptron Classification}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\titleformat{\section}{\Large\bfseries}{\thesection}{0.7em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{0.7em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection}{0.7em}{}
+\lstset{basicstyle=\ttfamily\small,breaklines=true,columns=fullflexible,frame=single,framerule=0.3pt,aboveskip=8pt,belowskip=8pt}
+\newcommand{\code}[1]{\texttt{\small #1}}
+
+\begin{document}
+
+\begin{titlepage}
+\centering
+\vspace*{0.18\textheight}
+{\Huge\bfseries Manual Multilayer Perceptron Classification with Backpropagation\par}
+\vspace{0.7cm}
+{\Large\bfseries Technical Analysis of a Python Implementation\par}
+\vspace{1.5cm}
+\begin{minipage}{0.84\textwidth}
+\centering
+This report describes the computational, mathematical, and software structure of the supplied Python source code. It covers the neural-network pipeline, data and weight handling, learning procedure, and implementation constraints that can be established directly from the source.
+\end{minipage}
+\vfill
+\end{titlepage}
+
+\tableofcontents
+\clearpage
+
+\section*{Source Boundary and Evidence Policy}
+This report stays within what can be established from the supplied Python program. The file contains 118 physical source lines and uses \code{pandas} and \code{numpy}. It also expects an external Excel workbook named \code{Computer\_Assignment\_4\_Data.xls}. That workbook was not provided, so the report does not state dataset dimensions, initial-weight values, training accuracy, or runtime measurements that cannot be determined from the source alone.
+
+The discussion below separates three kinds of evidence: behavior that is explicit in the code, standard mathematical interpretations of that behavior, and reasonable inferences from names or structure. When the implementation contains an inconsistency or a missing component, it is reported rather than silently corrected. This keeps the mathematical description separate from what the program actually does.
+
+\section*{Abstract}
+The supplied program implements a small multilayer perceptron (MLP) classifier with NumPy, a sigmoid activation function, and manually coded backpropagation. It reads training data, test data, and initial network weights from separate Excel sheets, extracts the input-to-hidden and hidden-to-output weight matrices, performs a forward pass through one hidden layer, computes output and hidden-layer error signals, and updates the parameters one sample at a time. During inference, the two output activations are converted to class labels with an \code{argmax} rule.
+
+The script is intentionally low level: it does not use a neural-network framework, automatic differentiation, or a pre-built classifier. As a result, the main computations are visible in the code, which makes the implementation easy to inspect. The source also has several correctness and robustness limitations. The training target slice is inconsistent with the two-column \code{y\_train} object, \code{evaluate\_results} is not defined in the supplied file, and the test labels are inferred from an unstated row-order assumption. In addition, \code{forward\_pass} prints the hidden weight matrix on every call, producing unnecessary console output during training.
+
+\section{Introduction}
+The project implements supervised binary classification with a feed-forward neural network. Its main task is to map two numerical features to a two-dimensional output representing two classes. Instead of relying on a machine-learning framework for training, the program explicitly performs the core MLP operations: affine transformations, nonlinear activation, error propagation, and parameter updates.
+
+This implementation makes the mechanics of neural-network learning easy to inspect. The code shows how bias terms are handled, how the sigmoid derivative is used, how the output error is propagated to the hidden layer, and how the weight updates are formed with outer products. Its main value as an educational implementation is that these operations are explicit rather than hidden behind a high-level API.
+
+This report focuses on the implementation itself. It follows the pipeline from workbook loading through preprocessing, weight initialization, forward propagation, backpropagation, optimization, testing, and the attempted evaluation step. It also records assumptions and execution-blocking defects that are visible in the source. Because the workbook was not supplied, no sample values or empirical performance are inferred.
+
+\section{Project Overview}
+The program can be viewed as five stages. It first loads the Excel workbook and reads the training set, test set, and initial-weight specification. It then parses the weight specification into the two layer-specific matrices. Next, it defines the sigmoid function and forward pass. Training iterates over epochs and samples, computes the error signals, and updates both weight matrices. Finally, the trained network is applied to the test set and the predictions are passed to the evaluation step.
+
+The top-level execution is linear. There is no model class, configuration class, or separate training script. The main network state is stored in two NumPy arrays, \code{weights\_input\_hidden} and \code{weights\_hidden\_output}. The input data remain in pandas objects, while the trainable parameters are converted to NumPy arrays before training.
+
+The design can be summarized as \(\text{Excel workbook} \rightarrow \text{parsed data/weights} \rightarrow \text{forward pass} \rightarrow \text{backpropagation} \rightarrow \text{updated weights} \rightarrow \text{test predictions} \rightarrow \text{evaluation call}\). The final step is incomplete because the supplied source references, but does not define, the evaluation function.
+
+\section{Technical Foundations}
+\subsection{Feed-Forward Multilayer Perceptron}
+The implemented model is a feed-forward neural network with one hidden layer. Let the input vector be \(\mathbf{x}\in\mathbb{R}^{d}\), the hidden-layer width be \(h\), and the output dimension be two. The hidden layer applies an affine transformation followed by a sigmoid activation, and the output layer uses the same pattern.
+
+For an input vector \(\mathbf{x}\), the hidden pre-activation is
+\begin{equation}
+\mathbf{z}^{(1)} = (\tilde{\mathbf{x}})^{\mathsf T}\mathbf{W}^{(1)},
+\end{equation}
+where \(\tilde{\mathbf{x}}=[x_1,\ldots,x_d,1]^{\mathsf T}\) is the augmented input vector containing a bias coordinate, and the corresponding final row of \(\mathbf{W}^{(1)}\) stores the hidden-layer bias parameters. The hidden activation is
+\begin{equation}
+\mathbf{h}=\sigma\!\left(\mathbf{z}^{(1)}\right).
+\end{equation}
+
+The output layer similarly forms
+\begin{equation}
+\mathbf{z}^{(2)} = (\tilde{\mathbf{h}})^{\mathsf T}\mathbf{W}^{(2)},
+\end{equation}
+where \(\tilde{\mathbf{h}}=[h_1,\ldots,h_h,1]^{\mathsf T}\). The final output is
+\begin{equation}
+\hat{\mathbf{y}}=\sigma\!\left(\mathbf{z}^{(2)}\right).
+\end{equation}
+
+The code implements this structure directly instead of using a general-purpose neural-network object.
+
+\subsection{Sigmoid Activation}
+The activation function is the logistic sigmoid
+\begin{equation}
+\sigma(z)=\frac{1}{1+e^{-z}}.
+\end{equation}
+Its derivative can be expressed compactly as
+\begin{equation}
+\sigma'(z)=\sigma(z)\bigl(1-\sigma(z)\bigr).
+\end{equation}
+The training implementation uses the activation values themselves to compute this derivative, avoiding a second exponential evaluation.
+
+\subsection{Backpropagation}
+The training routine follows the usual local-error backpropagation pattern for a sigmoid-output network with a squared-error-style delta rule. The output-layer error signal is
+\begin{equation}
+\mathbf{e}^{(2)}=\mathbf{t}-\hat{\mathbf{y}},
+\end{equation}
+and the output delta is
+\begin{equation}
+\boldsymbol{\delta}^{(2)}
+=\mathbf{e}^{(2)}\odot\hat{\mathbf{y}}\odot(\mathbf{1}-\hat{\mathbf{y}}),
+\end{equation}
+where \(\odot\) denotes element-wise multiplication. The hidden error signal is then propagated through the transpose of the non-bias part of the output weight matrix:
+\begin{equation}
+\mathbf{e}^{(1)}=\boldsymbol{\delta}^{(2)}\left(\mathbf{W}^{(2)}_{\mathrm{nb}}\right)^{\mathsf T},
+\end{equation}
+followed by
+\begin{equation}
+\boldsymbol{\delta}^{(1)}
+=\mathbf{e}^{(1)}\odot\mathbf{h}\odot(\mathbf{1}-\mathbf{h}).
+\end{equation}
+
+This follows the chain-rule structure for a one-hidden-layer network. The code updates the parameters immediately after each sample, so the training is sample-wise rather than full-batch.
+
+\section{Data and Input Processing}
+The program expects an Excel workbook named \code{Computer\_Assignment\_4\_Data.xls} with at least three sheets: \code{Training Set}, \code{Testing Set}, and \code{Initial Weights}. The training sheet is read with the columns \code{Class \#}, \code{x1}, \code{x2}, \code{Target1}, and \code{Target2}; the testing sheet uses \code{Class \#}, \code{x1}, and \code{x2}. The weight sheet is read without a header because it contains both section markers and numerical values.
+
+The source handles \code{Class \#} separately from \code{x1} and \code{x2}. Although \code{X\_train} initially contains all three columns, the training loop uses \code{inputs.iloc[i, 1:]}, so the network receives only \(x_1\) and \(x_2\). The \code{Class \#} field is not used as an input feature. Testing follows the same convention through \code{test\_set.iloc[i, 1:]}.
+
+The target frame contains only \code{Target1} and \code{Target2}. However, the training loop later accesses columns 3 through 4 of this two-column frame. With pandas integer-location slicing, \code{targets.iloc[i, 3:5]} returns an empty slice instead of the two target values. As written, the program therefore cannot complete its first training sample after the workbook is loaded.
+
+\section{Weight Representation and Initialization Parsing}
+The initial-weight sheet uses text markers to delimit the two weight blocks. The program locates \code{Input to Hidden Weights} and starts the first block on the next numeric row. It then looks for \code{Hidden to Output Weights}; when that marker is present, its row ends the first block. Otherwise, the code attempts to end the block immediately before the \code{Learning Rate} marker.
+
+The output-layer block is parsed only when the \code{Hidden to Output Weights} marker is present. The fallback therefore handles one workbook variation but has a clear limitation: without that marker, \code{hidden\_output\_weights} is an empty DataFrame. The training function then converts it to a NumPy array and uses it in matrix multiplication, so the resulting model is not trainable with such a workbook.
+
+The internal representation stores bias weights in the last row of each weight matrix. Both the forward pass and the update equations use this convention. For the hidden layer, the feature vector is multiplied by the non-bias rows and the final row is added as the bias term. The output layer uses the same arrangement with the hidden activations.
+
+\section{System Architecture and Code Organization}
+The code fits in a single source file and defines four functions. \code{sigmoid} provides the activation function. \code{forward\_pass} performs the two affine transformations and sigmoid activations. \code{train\_mlp} contains the training loop and parameter updates. \code{test\_mlp} performs inference and converts the two output activations to integer class labels.
+
+The rest of the file is top-level orchestration. It loads the workbook, extracts the data, parses the weight matrices, constructs the training and test objects, runs training and testing, creates an assumed true-label vector, and calls \code{evaluate\_results}. There is no \code{main()} function, so importing the module would also execute the file I/O and training code.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{p{0.25\textwidth}p{0.20\textwidth}p{0.47\textwidth}}
+\toprule
+\textbf{Component} & \textbf{Source region} & \textbf{Role}\\
+\midrule
+Excel loading & top-level setup & Reads training, testing, and initial-weight sheets.\\
+Weight parsing & top-level setup & Locates section markers and extracts weight blocks.\\
+\code{sigmoid} & function definition & Computes the logistic activation element-wise.\\
+\code{forward\_pass} & function definition & Computes hidden and output activations, including bias handling.\\
+\code{train\_mlp} & function definition & Runs sample-wise epochs, backpropagation, and weight updates.\\
+\code{test\_mlp} & function definition & Generates class predictions from output activations.\\
+Evaluation call & final top-level block & Invokes an undefined \code{evaluate\_results} function.\\
+\bottomrule
+\end{tabular}
+\caption{Functional decomposition of the supplied source code.}
+\end{table}
+
+\section{Detailed Methodology}
+\subsection{Forward Propagation}
+The implementation receives a two-element feature vector and handles the bias separately. If the hidden weight matrix has shape \((d+1)\times h\), the code computes
+\begin{equation}
+\mathbf{z}^{(1)} = \mathbf{x}^{\mathsf T}\mathbf{W}^{(1)}_{\mathrm{nb}} + \mathbf{b}^{(1)},
+\end{equation}
+where \(\mathbf{W}^{(1)}_{\mathrm{nb}}\) denotes all but the final row of the matrix and \(\mathbf{b}^{(1)}\) is the final row. The hidden activations are then obtained through the sigmoid function.
+
+The output stage applies the same construction:
+\begin{equation}
+\mathbf{z}^{(2)} = \mathbf{h}^{\mathsf T}\mathbf{W}^{(2)}_{\mathrm{nb}} + \mathbf{b}^{(2)},
+\end{equation}
+followed by \(\hat{\mathbf{y}}=\sigma(\mathbf{z}^{(2)})\).
+
+One implementation detail is especially costly: \code{forward\_pass} prints the entire input-to-hidden weight matrix before returning. The function is called for every training sample and every test sample, so this print statement runs inside the main computation loop. With 500 epochs, the amount of output grows with the number of training samples times 500 and can become very large.
+
+\subsection{Output Error and Delta}
+The training code forms a target-minus-prediction residual,
+\begin{equation}
+\mathbf{e}^{(2)}=\mathbf{t}-\hat{\mathbf{y}},
+\end{equation}
+and multiplies it element-wise by the sigmoid derivative. This yields
+\begin{equation}
+\boldsymbol{\delta}^{(2)}
+=(\mathbf{t}-\hat{\mathbf{y}})\odot\hat{\mathbf{y}}\odot(1-\hat{\mathbf{y}}).
+\end{equation}
+This sign convention matches the code's choice to add the update to the current weights rather than subtract a gradient written with the opposite error sign.
+
+The code does not compute a scalar loss value. There is therefore no loss history, convergence plot, or loss-based stopping criterion. The optimizer always runs for the fixed number of epochs supplied by the caller.
+
+\subsection{Hidden-Layer Backpropagation}
+The hidden-layer error is computed using the non-bias output weights:
+\begin{equation}
+\mathbf{e}^{(1)}=\boldsymbol{\delta}^{(2)}(\mathbf{W}^{(2)}_{\mathrm{nb}})^{\mathsf T}.
+\end{equation}
+The hidden delta then follows from the sigmoid derivative:
+\begin{equation}
+\boldsymbol{\delta}^{(1)}=\mathbf{e}^{(1)}\odot\mathbf{h}\odot(1-\mathbf{h}).
+\end{equation}
+This excludes the output-layer bias weights from the hidden-error calculation. That is appropriate because the bias is not a hidden unit and is not part of the chain-rule path back to the hidden activations.
+
+\subsection{Parameter Updates}
+The hidden-to-output weights are updated with the outer product of hidden activations and output deltas:
+\begin{equation}
+\mathbf{W}^{(2)}_{\mathrm{nb}}\leftarrow
+\mathbf{W}^{(2)}_{\mathrm{nb}}
++\eta\,\mathbf{h}\,(\boldsymbol{\delta}^{(2)})^{\mathsf T},
+\end{equation}
+with the output bias updated as
+\begin{equation}
+\mathbf{b}^{(2)}\leftarrow\mathbf{b}^{(2)}+\eta\boldsymbol{\delta}^{(2)}.
+\end{equation}
+Analogously, the input-to-hidden matrix is updated as
+\begin{equation}
+\mathbf{W}^{(1)}_{\mathrm{nb}}\leftarrow
+\mathbf{W}^{(1)}_{\mathrm{nb}}
++\eta\,\mathbf{x}\,(\boldsymbol{\delta}^{(1)})^{\mathsf T},
+\end{equation}
+and the hidden bias becomes
+\begin{equation}
+\mathbf{b}^{(1)}\leftarrow\mathbf{b}^{(1)}+\eta\boldsymbol{\delta}^{(1)}.
+\end{equation}
+The use of \code{np.outer} makes this structure explicit: each connection weight is adjusted according to the presynaptic activation and postsynaptic error signal.
+
+\section{Optimization and Learning Procedure}
+The call to \code{train\_mlp} uses a learning rate of \(\eta=0.2\) and 500 epochs, giving the training a fixed budget. The source does not use minibatches, momentum, an adaptive learning-rate schedule, weight decay, gradient clipping, or early stopping.
+
+The nested loops implement the sequence
+\begin{enumerate}
+\item select one training sample;
+\item compute hidden and output activations;
+\item compute the output delta;
+\item propagate the delta to the hidden layer;
+\item update output weights and bias;
+\item update hidden weights and bias;
+\item move directly to the next sample.
+\end{enumerate}
+Because the weights are updated after each sample, later samples in an epoch use parameters that already reflect earlier samples. This is the defining behavior of online or stochastic gradient-style training.
+
+The source does not shuffle samples between epochs, so the row order in the training sheet determines the update order in every epoch. If the data are ordered by class, the resulting optimization path can differ from that of a shuffled implementation even with the same samples and hyperparameters.
+
+\section{Testing and Prediction Rule}
+After training, \code{test\_mlp} computes a two-dimensional output for each test sample. The predicted class is selected by
+\begin{equation}
+\hat{c}=1+\operatorname*{arg\,max}_{j\in\{1,2\}} \hat{y}_j.
+\end{equation}
+The addition of one converts NumPy's zero-based index to class labels 1 and 2.
+
+This decision rule is consistent with a two-output representation when the targets use two components and the larger activation selects the class. However, the source does not verify that the targets are one-hot encoded or that the two target columns correspond exactly to classes 1 and 2. That relationship is inferred from \code{Target1}, \code{Target2}, and the prediction rule.
+
+The test-label construction is more fragile. The program creates
+\code{[1] * (n // 2) + [2] * (n // 2)}.
+This assumes that the number of test samples is even and that the first half of the rows belongs to class 1 while the second half belongs to class 2. The workbook, not the Python file, would determine whether that ordering is correct. The code therefore does not extract the actual test labels from the test sheet.
+
+\section{Mathematical Formulation of the Implemented Learner}
+Let \(\mathbf{x}\in\mathbb{R}^{d}\) denote the feature vector, \(h\) the hidden width, and \(K=2\) the output dimension. With explicit bias terms, the network can be expressed compactly as
+\begin{align}
+\mathbf{z}^{(1)} &= \mathbf{x}^{\mathsf T}\mathbf{W}^{(1)}_{\mathrm{nb}} + \mathbf{b}^{(1)},\\
+\mathbf{h} &= \sigma(\mathbf{z}^{(1)}),\\
+\mathbf{z}^{(2)} &= \mathbf{h}^{\mathsf T}\mathbf{W}^{(2)}_{\mathrm{nb}} + \mathbf{b}^{(2)},\\
+\hat{\mathbf{y}} &= \sigma(\mathbf{z}^{(2)}).
+\end{align}
+
+The code's delta rule can be written as
+\begin{align}
+\boldsymbol{\delta}^{(2)}
+&=(\mathbf{t}-\hat{\mathbf{y}})\odot\hat{\mathbf{y}}\odot(\mathbf{1}-\hat{\mathbf{y}}),\\
+\boldsymbol{\delta}^{(1)}
+&=\left(\boldsymbol{\delta}^{(2)}(\mathbf{W}^{(2)}_{\mathrm{nb}})^{\mathsf T}\right)
+\odot\mathbf{h}\odot(\mathbf{1}-\mathbf{h}).
+\end{align}
+
+For the non-bias weights, a single-sample update is therefore
+\begin{align}
+\mathbf{W}^{(2)}_{\mathrm{nb}} &\leftarrow \mathbf{W}^{(2)}_{\mathrm{nb}}+\eta\mathbf{h}(\boldsymbol{\delta}^{(2)})^{\mathsf T},\\
+\mathbf{W}^{(1)}_{\mathrm{nb}} &\leftarrow \mathbf{W}^{(1)}_{\mathrm{nb}}+\eta\mathbf{x}(\boldsymbol{\delta}^{(1)})^{\mathsf T}.
+\end{align}
+These equations describe the mathematical intent of the update sequence. They do not show that the script defines a formal scalar objective, because no such objective is explicitly defined or recorded in the source.
+
+\section{Implementation Details}
+\subsection{Library Use}
+Only two third-party Python libraries are imported: \code{pandas} and \code{numpy}. Pandas handles Excel I/O and tabular slicing, while NumPy provides arrays, dot products, concatenation, element-wise operations, exponentiation, and outer products. The source has no dependency on TensorFlow, PyTorch, scikit-learn, or automatic differentiation.
+
+\subsection{Data Structure Boundaries}
+The implementation has a clear representation boundary. Spreadsheet-derived data remain pandas DataFrames, while the trainable weight matrices are converted to NumPy arrays at the start of \code{train\_mlp}. This is a practical division for a small script: pandas is convenient for tabular indexing, and NumPy is suited to the repeated numerical operations.
+
+\subsection{In-Place Mutation}
+Both weight matrices are modified in place during training, so the returned arrays contain the final parameter values after all epochs. The training routine is therefore stateful even though it is written as a function with explicit array arguments. The input DataFrames are otherwise left unchanged apart from the earlier column-name normalization applied to \code{X\_train}.
+
+\subsection{Numerical Stability}
+The sigmoid implementation uses the direct expression \(1/(1+e^{-x})\). This is adequate for moderate values, but it can overflow in the exponential for large negative inputs and can saturate for large-magnitude inputs. The source includes no clipping, stabilized sigmoid formulation, or warning handling. The practical impact cannot be assessed without the initial weights and feature values from the workbook.
+
+\section{Execution Workflow}
+At source level, the execution sequence is straightforward. The workbook is opened first. The training and testing sheets are read with fixed column names, and the initial-weight sheet is loaded without headers. The code then searches for the weight-block markers, defines the model functions, and constructs \code{X\_train}, \code{y\_train}, and \code{X\_test}.
+
+Next, \code{train\_mlp} is called with the parsed weights, a learning rate of 0.2, and 500 epochs. In the intended execution, each sample goes through a forward and backward pass followed by an immediate update. \code{test\_mlp} then processes the test samples, a synthetic true-label vector is created using the equal-halves assumption, and \code{evaluate\_results} is called.
+
+The final step cannot execute because the supplied source neither defines nor imports \code{evaluate\_results}. More importantly, execution is expected to fail earlier during the first training sample because of the target-slice inconsistency described above. The sequence should therefore be read as the intended workflow, not as evidence of a successful end-to-end run.
+
+\section{Design Decisions and Rationale}
+The main design choice is to implement the neural-network algorithm explicitly. This exposes details that high-level libraries normally hide, including bias handling, matrix shapes, the chain rule, activation derivatives, and sample-wise updates. For an educational assignment, this makes the learning process easy to inspect.
+
+The source also uses a spreadsheet as the interface between data preparation and model execution. That is practical when an assignment distributes data and initial weights in workbook sheets, but it makes the pipeline depend on an external file with exact sheet names and marker strings.
+
+The separate functions for forward propagation, training, and testing provide useful conceptual boundaries even without a formal model class. In particular, \code{train\_mlp} calls \code{forward\_pass} instead of duplicating the activation calculations, so that part of the computation remains centralized.
+
+Some choices are visible in the code but are not explained, so their rationale should not be inferred. The source uses 500 epochs and a learning rate of 0.2, but it does not say why those values were chosen. The test-label construction likewise suggests an expected row order without documenting or checking it.
+
+\section{Computational Considerations}
+Let \(N\) be the number of training samples, \(d\) the number of input features, \(h\) the number of hidden units, and \(K=2\) the number of outputs. A forward and backward pass is dominated by matrix-vector products and element-wise operations. For one sample, the leading arithmetic is approximately
+\begin{equation}
+O(dh+hK),
+\end{equation}
+with additional lower-order element-wise work. Over \(E\) epochs and \(N\) samples, the training cost is approximately
+\begin{equation}
+O\!\left(E N(dh+hK)\right).
+\end{equation}
+
+The source uses explicit Python loops over epochs and samples. The numerical operations inside each iteration are handled by NumPy, but the per-sample control flow remains in Python. This is reasonable for a small educational dataset, though it is less scalable than vectorized minibatch training.
+
+Memory use is modest for a small MLP because the persistent model state consists mainly of the two weight matrices. There is no replay buffer, optimizer state, or stored activation history across the dataset. The main practical issue is therefore not model size but the large amount of console output produced by \code{forward\_pass}.
+
+\section{Reproducibility and Reliability}
+The program does not generate random numbers, so the operations visible in the source do not require a random seed. This improves reproducibility because the initial weights are read from the workbook rather than sampled inside the script.
+
+Reproducibility still depends on using the same workbook contents, sheet names, row ordering, marker labels, numeric types, and initial-weight layout. The learning rate and epoch count are also hard-coded at the training call site. The supplied source contains no dependency lock file, environment specification, or library-version checks.
+
+Reliability is limited by the lack of input validation. The program does not check that the required sheets exist, that the marker strings occur exactly once, that the parsed matrices have compatible shapes, that the target has two elements, or that the test set has an even number of rows. A more robust implementation would check these assumptions and raise informative errors.
+
+\section{Limitations and Technical Considerations}
+\subsection{Target Extraction Defect}
+The clearest correctness defect is the mismatch between how \code{y\_train} is constructed and how the training loop slices it. \code{y\_train} has exactly two columns, but the later slice requests positions 3 through 4. The resulting target array is empty. The line
+\begin{lstlisting}[language=Python]
+target = targets.iloc[i, 3:5].to_numpy()
+\end{lstlisting}
+does not extract the intended target pair. Based on the supplied source, this is a blocking training error, not a stylistic issue.
+
+\subsection{Undefined Evaluation Function}
+The final statement calls \code{evaluate\_results(predictions, true\_labels)}, but that function is neither defined nor imported. The supplied file therefore cannot complete the evaluation stage on its own.
+
+\subsection{Synthetic Test Labels}
+The construction of \code{true\_labels} does not read labels from the test data. It assumes an even number of test observations and a fixed order in which half are class 1 followed by class 2. That may match the workbook convention, but the source does not verify it.
+
+\subsection{Repeated Debug Output}
+The print statement inside \code{forward\_pass} runs for every sample in every epoch. It can therefore produce a large amount of output and adds I/O to the main training loop.
+
+\subsection{Incomplete Validation and Configuration}
+The parser depends on exact marker text and positional conventions. It performs no explicit shape validation or error reporting for malformed inputs. The script also assumes that the external \code{.xls} file is available in the current working directory and can be read by the installed pandas Excel engine.
+
+\subsection{No Explicit Loss Tracking or Convergence Criterion}
+The source does not compute or store a scalar loss over time, and the epoch count is fixed. The code therefore provides no direct way to determine whether optimization converged, oscillated, or stopped before reaching an adequate solution.
+
+\section{Overall Technical Assessment}
+The implementation shows a clear understanding of the core mechanics of a small feed-forward neural network. Its main strength is transparency: the sigmoid activation, forward propagation, backpropagation, bias handling, and parameter updates are visible rather than hidden behind a framework. The use of outer products for the connection updates and the exclusion of bias rows from hidden-error propagation are also technically appropriate.
+
+The software structure is also coherent for a compact assignment. The forward pass, training loop, and testing routine are separated into distinct functions, with pandas handling the workbook and NumPy handling numerical computation. Because there is no framework-level training behavior, the script is straightforward to inspect mathematically.
+
+The supplied source should not be presented as a verified, fully executable implementation without qualification. The target-extraction bug prevents correct training, the evaluation function is missing, and the true-label construction depends on an unverified ordering assumption. These are execution and evaluation issues, not matters of style. From a reproducibility perspective, the code illustrates that a sound algorithmic idea still depends on consistent data interfaces, explicit validation, and an end-to-end execution check.
+
+\section{Conclusion}
+The project is a direct NumPy implementation of a two-output multilayer perceptron with sigmoid activations and sample-wise backpropagation. Its computation consists of affine transformations, nonlinear activations, error signals, and outer-product weight updates. Bias parameters are represented explicitly as the final row of each weight matrix.
+
+The implementation is useful as an example of low-level neural-network programming because it exposes the mechanics of learning instead of relying on automatic differentiation or a high-level training API. Its structure is compact and readable, and the numerical operations closely follow the standard chain-rule formulation of backpropagation.
+
+The source audit also sets clear limits on what can be claimed. The external workbook is needed to determine concrete dimensions and values, and the supplied script contains defects that prevent an unqualified claim of successful end-to-end execution. The technical description should therefore distinguish the intended mathematical architecture from the actual execution and explicitly note the target-indexing error, missing evaluation routine, label-order assumption, repeated debug output, and other reliability constraints.
+
+\section*{Source Traceability Map}
+For practical review, the main implementation regions are workbook loading and data extraction (approximately lines 4--14), weight-block parsing (approximately lines 16--36), the sigmoid activation and forward pass (approximately lines 40--52), training and backpropagation (approximately lines 56--85), testing and prediction (approximately lines 87--96), and top-level orchestration and evaluation (approximately lines 98--118). These regions link the report's discussion directly to the supplied source.
+
+\end{document}
