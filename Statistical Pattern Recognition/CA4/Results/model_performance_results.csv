@@ -1,0 +1,2 @@
+samples_tested,class_1_true,class_2_true,correct_predictions,misclassified_samples,accuracy,final_training_mse
+1000,500,500,932,68,0.932,0.045295863792794246

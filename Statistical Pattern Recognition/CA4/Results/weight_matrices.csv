@@ -1,0 +1,23 @@
+layer,source,target,weight
+input_to_hidden,Input 1,Hidden 1,10.312664811476628
+input_to_hidden,Input 1,Hidden 2,-22.98352890164961
+input_to_hidden,Input 1,Hidden 3,-1.6907994412462404
+input_to_hidden,Input 1,Hidden 4,-6.082618523661097
+input_to_hidden,Input 2,Hidden 1,-0.6889004071700279
+input_to_hidden,Input 2,Hidden 2,1.4724006866236885
+input_to_hidden,Input 2,Hidden 3,-0.6739257215865248
+input_to_hidden,Input 2,Hidden 4,-0.9066476438909074
+input_to_hidden,Bias Node (+1),Hidden 1,-5.163270209164302
+input_to_hidden,Bias Node (+1),Hidden 2,10.876936770290786
+input_to_hidden,Bias Node (+1),Hidden 3,-1.1385291862320157
+input_to_hidden,Bias Node (+1),Hidden 4,0.889837754840124
+hidden_to_output,Hidden 1,Output 1,-1.9524048611636555
+hidden_to_output,Hidden 1,Output 2,2.0667472339955695
+hidden_to_output,Hidden 2,Output 1,5.403473449919709
+hidden_to_output,Hidden 2,Output 2,-5.32913058820763
+hidden_to_output,Hidden 3,Output 1,0.5493559536244274
+hidden_to_output,Hidden 3,Output 2,-0.6159082169479954
+hidden_to_output,Hidden 4,Output 1,2.466649821058801
+hidden_to_output,Hidden 4,Output 2,-2.6061837611465157
+hidden_to_output,Bias Node (+1),Output 1,-1.7938569889853053
+hidden_to_output,Bias Node (+1),Output 2,1.7232297334603777
